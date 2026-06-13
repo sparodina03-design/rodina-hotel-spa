@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Star, Award, Users, Globe } from "lucide-react";
+import { useSiteSettings } from "./SettingsProvider";
 
 const stats = [
   { icon: Star, value: "5-Star", label: "Luxury Rating" },
@@ -11,6 +12,11 @@ const stats = [
 ];
 
 export default function AboutSection() {
+  const { settings } = useSiteSettings();
+  const content = settings.content;
+  const hotel = settings.hotel;
+  const images = settings.images;
+
   return (
     <section id="about" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,14 +31,14 @@ export default function AboutSection() {
           >
             <div className="relative">
               <img
-                src="/images/lobby.png"
-                alt="MH Hotel grand lobby"
+                src={images?.aboutMain || "/images/lobby.png"}
+                alt={hotel?.name || "RODINA Hotel & SPA"}
                 className="w-full h-[500px] object-cover rounded-2xl luxury-shadow"
               />
               <div className="absolute -bottom-8 -right-8 w-48 h-48 rounded-2xl overflow-hidden border-4 border-background luxury-shadow hidden sm:block">
                 <img
-                  src="/images/room-classic.png"
-                  alt="MH Hotel elegant room"
+                  src={images?.aboutInset || "/images/room-classic.png"}
+                  alt={`${hotel?.name || "RODINA Hotel & SPA"} elegant room`}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -49,24 +55,17 @@ export default function AboutSection() {
             viewport={{ once: true }}
           >
             <p className="text-gold tracking-[0.4em] uppercase text-sm mb-4 font-[var(--font-lato)]">
-              Our Story
+              {content?.aboutLabel || "Notre Histoire"}
             </p>
             <h2 className="text-4xl md:text-5xl font-[var(--font-playfair)] font-bold mb-6 text-foreground">
-              A Legacy of <span className="gold-text">Luxury</span>
+              {content?.aboutTitle1 || "Un Héritage de"} <span className="gold-text">{content?.aboutTitle2 || "Luxe"}</span>
             </h2>
             <div className="w-16 h-[2px] bg-gold mb-8" />
             <p className="text-muted-foreground leading-relaxed mb-6 font-[var(--font-lato)] text-lg">
-              Since its inception, MH Hotel has been a beacon of sophistication
-              and warmth in the heart of the city. Our commitment to excellence
-              transcends ordinary hospitality, offering each guest a curated
-              experience that blends timeless elegance with contemporary comfort.
+              {content?.aboutP1 || "Depuis sa création, RODINA Hotel & SPA est un phare de sophistication et de chaleur au cœur de la ville. Notre engagement envers l'excellence transcende l'hospitalité ordinaire, offrant à chaque invité une expérience sur mesure qui mêle élégance intemporelle et confort contemporain."}
             </p>
             <p className="text-muted-foreground leading-relaxed mb-8 font-[var(--font-lato)]">
-              Every detail at MH Hotel has been thoughtfully crafted, from the
-              hand-selected furnishings in our suites to the locally sourced
-              ingredients in our restaurants. We believe that true luxury lies in
-              the art of anticipation, where every need is met before it is
-              expressed, and every moment becomes a cherished memory.
+              {content?.aboutP2 || "Chaque détail au RODINA Hotel & SPA a été pensé avec soin, des mobiliers sélectionnés avec goût dans nos suites aux ingrédients locaux de nos restaurants. Nous croyons que le véritable luxe réside dans l'art de l'anticipation, où chaque besoin est comblé avant même d'être exprimé, et chaque instant devient un souvenir précieux."}
             </p>
 
             {/* Stats */}

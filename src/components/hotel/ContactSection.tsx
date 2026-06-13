@@ -12,39 +12,56 @@ import {
   Send,
   Instagram,
   Facebook,
-  Twitter,
+  Youtube,
+  MessageCircle,
 } from "lucide-react";
-
-const contactInfo = [
-  {
-    icon: MapPin,
-    title: "Address",
-    details: ["123 Luxury Avenue", "Downtown District", "New York, NY 10001"],
-  },
-  {
-    icon: Phone,
-    title: "Phone",
-    details: ["+1 (234) 567-890", "+1 (234) 567-891"],
-  },
-  {
-    icon: Mail,
-    title: "Email",
-    details: ["reservations@mhhotel.com", "info@mhhotel.com"],
-  },
-  {
-    icon: Clock,
-    title: "Front Desk",
-    details: ["24/7 Available", "Check-in: 3:00 PM", "Check-out: 12:00 PM"],
-  },
-];
-
-const socialLinks = [
-  { icon: Instagram, label: "Instagram", href: "#" },
-  { icon: Facebook, label: "Facebook", href: "#" },
-  { icon: Twitter, label: "Twitter", href: "#" },
-];
+import { useSiteSettings } from "./SettingsProvider";
 
 export default function ContactSection() {
+  const { settings } = useSiteSettings();
+  const contact = settings.contact;
+  const social = settings.social;
+  const hotel = settings.hotel;
+
+  const contactInfo = [
+    {
+      icon: MapPin,
+      title: "Adresse",
+      details: [contact?.address || "City Center, Main Boulevard"],
+    },
+    {
+      icon: Phone,
+      title: "Téléphone",
+      details: [contact?.phone || "+1 (234) 567-890"],
+    },
+    {
+      icon: Mail,
+      title: "Email",
+      details: [contact?.email || "info@rodinahotel.com"],
+    },
+    {
+      icon: Clock,
+      title: "Réception",
+      details: ["Disponible 24/7", "Check-in: 15:00", "Check-out: 12:00"],
+    },
+  ];
+
+  // Build social links from settings
+  const socialLinks = [
+    ...(social?.facebook ? [{ icon: Facebook, label: "Facebook", href: social.facebook }] : []),
+    ...(social?.instagram ? [{ icon: Instagram, label: "Instagram", href: social.instagram }] : []),
+    ...(social?.whatsapp ? [{ icon: MessageCircle, label: "WhatsApp", href: social.whatsapp }] : []),
+    ...(social?.youtube ? [{ icon: Youtube, label: "YouTube", href: social.youtube }] : []),
+  ];
+
+  // Fallback if no social links configured
+  const displaySocials = socialLinks.length > 0
+    ? socialLinks
+    : [
+        { icon: Instagram, label: "Instagram", href: "#" },
+        { icon: Facebook, label: "Facebook", href: "#" },
+      ];
+
   return (
     <section id="contact" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,16 +74,16 @@ export default function ContactSection() {
           className="text-center mb-16"
         >
           <p className="text-gold tracking-[0.4em] uppercase text-sm mb-4 font-[var(--font-lato)]">
-            Get in Touch
+            Contactez-nous
           </p>
           <h2 className="text-4xl md:text-5xl font-[var(--font-playfair)] font-bold mb-4 text-foreground">
             Contact <span className="gold-text">Us</span>
           </h2>
           <div className="w-16 h-[2px] bg-gold mx-auto mb-6" />
           <p className="text-muted-foreground max-w-2xl mx-auto font-[var(--font-lato)] text-lg">
-            We would love to hear from you. Whether you have a question about
-            reservations, services, or anything else, our team is ready to
-            assist.
+            Nous serions ravis de vous entendre. Que vous ayez une question sur
+            les réservations, les services ou autre chose, notre équipe est prête
+            à vous assister.
           </p>
         </motion.div>
 
@@ -110,17 +127,19 @@ export default function ContactSection() {
             {/* Social Links */}
             <div className="pt-6 border-t border-border">
               <p className="text-sm text-muted-foreground mb-4 font-[var(--font-lato)] tracking-wider uppercase">
-                Follow Us
+                Suivez-nous
               </p>
               <div className="flex gap-3">
-                {socialLinks.map((social) => (
+                {displaySocials.map((socialItem) => (
                   <a
-                    key={social.label}
-                    href={social.href}
+                    key={socialItem.label}
+                    href={socialItem.href}
                     className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold/10 transition-colors"
-                    aria-label={social.label}
+                    aria-label={socialItem.label}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <social.icon className="w-4 h-4" />
+                    <socialItem.icon className="w-4 h-4" />
                   </a>
                 ))}
               </div>
@@ -132,7 +151,7 @@ export default function ContactSection() {
                 <div className="text-center">
                   <MapPin className="w-8 h-8 text-gold mx-auto mb-2" />
                   <p className="text-muted-foreground text-sm font-[var(--font-lato)]">
-                    123 Luxury Avenue, NYC
+                    {contact?.address || "City Center, Main Boulevard"}
                   </p>
                 </div>
               </div>
@@ -151,19 +170,19 @@ export default function ContactSection() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm text-foreground font-[var(--font-lato)] tracking-wider">
-                    First Name
+                    Prénom
                   </label>
                   <Input
-                    placeholder="Your first name"
+                    placeholder="Votre prénom"
                     className="bg-background border-border focus:border-gold font-[var(--font-lato)]"
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm text-foreground font-[var(--font-lato)] tracking-wider">
-                    Last Name
+                    Nom
                   </label>
                   <Input
-                    placeholder="Your last name"
+                    placeholder="Votre nom"
                     className="bg-background border-border focus:border-gold font-[var(--font-lato)]"
                   />
                 </div>
@@ -174,17 +193,17 @@ export default function ContactSection() {
                 </label>
                 <Input
                   type="email"
-                  placeholder="your@email.com"
+                  placeholder="votre@email.com"
                   className="bg-background border-border focus:border-gold font-[var(--font-lato)]"
                 />
               </div>
               <div className="space-y-2">
                 <label className="text-sm text-foreground font-[var(--font-lato)] tracking-wider">
-                  Phone
+                  Téléphone
                 </label>
                 <Input
                   type="tel"
-                  placeholder="+1 (234) 567-890"
+                  placeholder={contact?.phone || "+1 (234) 567-890"}
                   className="bg-background border-border focus:border-gold font-[var(--font-lato)]"
                 />
               </div>
@@ -193,14 +212,14 @@ export default function ContactSection() {
                   Message
                 </label>
                 <Textarea
-                  placeholder="How can we help you?"
+                  placeholder="Comment pouvons-nous vous aider ?"
                   rows={5}
                   className="bg-background border-border focus:border-gold font-[var(--font-lato)] resize-none"
                 />
               </div>
               <Button className="w-full gold-gradient text-charcoal font-semibold tracking-wider uppercase hover:opacity-90 font-[var(--font-lato)]">
                 <Send className="w-4 h-4 mr-2" />
-                Send Message
+                Envoyer le Message
               </Button>
             </form>
           </motion.div>

@@ -368,7 +368,7 @@ function HotelPanel({
     <>
       <SectionCard title="Informations de l'Hôtel">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <FormField label="Nom de l'hôtel" value={form.name || ""} onChange={(v) => setForm({ ...form, name: v })} placeholder="MH HOTEL" />
+          <FormField label="Nom de l'hôtel" value={form.name || ""} onChange={(v) => setForm({ ...form, name: v })} placeholder="RODINA Hotel & SPA" />
           <FormField label="Slogan" value={form.tagline || ""} onChange={(v) => setForm({ ...form, tagline: v })} placeholder="Luxury Redefined" />
           <FormField label="Lettre du logo" value={form.logoLetter || ""} onChange={(v) => setForm({ ...form, logoLetter: v })} placeholder="M" />
         </div>

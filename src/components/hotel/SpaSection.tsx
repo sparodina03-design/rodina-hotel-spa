@@ -50,7 +50,7 @@ export default function SpaSection() {
           >
             <img
               src="/images/spa-treatment.png"
-              alt="MH Hotel luxury spa"
+              alt="RODINA Hotel & SPA luxury spa"
               className="w-full h-[600px] object-cover rounded-2xl luxury-shadow"
             />
             <div className="absolute top-4 left-4 bg-charcoal/80 backdrop-blur-sm rounded-xl p-4 border border-gold/20">

@@ -11,7 +11,7 @@ const testimonials = [
     avatar: "SM",
     rating: 5,
     title: "An Unforgettable Stay",
-    text: "From the moment we arrived, the staff made us feel like royalty. The Presidential Suite exceeded all expectations, and the spa treatment was the most rejuvenating experience I have ever had. MH Hotel truly sets the gold standard for luxury hospitality.",
+    text: "From the moment we arrived, the staff made us feel like royalty. The Presidential Suite exceeded all expectations, and the spa treatment was the most rejuvenating experience I have ever had. RODINA Hotel & SPA truly sets the gold standard for luxury hospitality.",
   },
   {
     name: "Ahmed Al-Rashid",
@@ -19,7 +19,7 @@ const testimonials = [
     avatar: "AR",
     rating: 5,
     title: "Simply Magnificent",
-    text: "I have stayed at luxury hotels around the world, and MH Hotel stands among the very best. The attention to detail is remarkable, from the hand-pressed linens to the personalized welcome amenities. The Goldfinch restaurant alone is worth the visit.",
+    text: "I have stayed at luxury hotels around the world, and RODINA Hotel & SPA stands among the very best. The attention to detail is remarkable, from the hand-pressed linens to the personalized welcome amenities. The restaurant alone is worth the visit.",
   },
   {
     name: "Elena Vasiliev",
@@ -27,7 +27,7 @@ const testimonials = [
     avatar: "EV",
     rating: 5,
     title: "A Dream Wedding Venue",
-    text: "Our wedding at MH Hotel was nothing short of magical. The events team coordinated every detail flawlessly, from the floral arrangements to the five-course dinner. Our guests are still talking about it months later. We could not have asked for more.",
+    text: "Our wedding at RODINA Hotel & SPA was nothing short of magical. The events team coordinated every detail flawlessly, from the floral arrangements to the five-course dinner. Our guests are still talking about it months later. We could not have asked for more.",
   },
   {
     name: "James Crawford",
@@ -35,7 +35,7 @@ const testimonials = [
     avatar: "JC",
     rating: 5,
     title: "Corporate Excellence",
-    text: "We hosted our annual leadership summit at MH Hotel and the experience was impeccable. The conference facilities are state-of-the-art, the catering was exceptional, and the concierge team went above and beyond to accommodate our every need.",
+    text: "We hosted our annual leadership summit at RODINA Hotel & SPA and the experience was impeccable. The conference facilities are state-of-the-art, the catering was exceptional, and the concierge team went above and beyond to accommodate our every need.",
   },
   {
     name: "Yuki Tanaka",
@@ -43,7 +43,7 @@ const testimonials = [
     avatar: "YT",
     rating: 5,
     title: "A Sanctuary of Calm",
-    text: "In the midst of a bustling city, MH Hotel offers an oasis of tranquility. The spa treatments, the serene pool area, and the beautifully appointed rooms create a sense of peace that is truly rare. I return every chance I get.",
+    text: "In the midst of a bustling city, RODINA Hotel & SPA offers an oasis of tranquility. The spa treatments, the serene pool area, and the beautifully appointed rooms create a sense of peace that is truly rare. I return every chance I get.",
   },
   {
     name: "Maria Fernandez",

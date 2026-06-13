@@ -20,6 +20,7 @@ import { format } from "date-fns";
 import { CalendarIcon, Users, ChevronDown, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useSiteSettings } from "./SettingsProvider";
 
 export default function HeroSection() {
   const [checkIn, setCheckIn] = useState<Date>();
@@ -27,6 +28,23 @@ export default function HeroSection() {
   const [guests, setGuests] = useState("2");
   const [roomType, setRoomType] = useState("");
   const [showVideo, setShowVideo] = useState(false);
+  const { settings } = useSiteSettings();
+
+  const content = settings.content;
+  const hotel = settings.hotel;
+  const images = settings.images;
+
+  // Build room type options from settings
+  const roomOptions = settings.rooms?.length
+    ? settings.rooms.map((r) => ({ value: r.id, label: r.name }))
+    : [
+        { value: "classique", label: "Chambre Classique" },
+        { value: "superieure", label: "Chambre Supérieure" },
+        { value: "premium", label: "Chambre Premium" },
+        { value: "junior-suite", label: "Suite Junior" },
+        { value: "romantique", label: "Suite Romantique" },
+        { value: "familiale", label: "Chambre Familiale" },
+      ];
 
   return (
     <section
@@ -36,8 +54,8 @@ export default function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/images/hotel-exterior.png"
-          alt="MH Hotel exterior"
+          src={images?.heroBg || "/images/hotel-exterior.png"}
+          alt={hotel?.name || "RODINA Hotel & SPA"}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
@@ -63,7 +81,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="text-center text-gold-light tracking-[0.5em] uppercase text-sm mb-4 font-[var(--font-lato)]"
         >
-          Welcome to
+          {content?.heroWelcome || "Bienvenue à"}
         </motion.p>
 
         <motion.h1
@@ -72,7 +90,7 @@ export default function HeroSection() {
           transition={{ duration: 1, delay: 0.7 }}
           className="text-center text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-[var(--font-playfair)] font-bold text-white mb-4 tracking-wide"
         >
-          MH <span className="gold-text">HOTEL</span>
+          {content?.heroTitle1 || "RODINA"} <span className="gold-text">{content?.heroTitle2 || "Hotel & SPA"}</span>
         </motion.h1>
 
         <motion.div
@@ -88,8 +106,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 1.2 }}
           className="text-center text-white/80 text-lg sm:text-xl max-w-2xl mx-auto mb-10 font-[var(--font-lato)] font-light leading-relaxed"
         >
-          Where timeless elegance meets modern luxury. Experience a world of
-          refined comfort, impeccable service, and unforgettable moments.
+          {content?.heroSubtitle || "Là où l'élégance intemporelle rencontre le luxe moderne. Vivez un monde de confort raffiné, de service irréprochable et de moments inoubliables."}
         </motion.p>
 
         {/* Play Video Button */}
@@ -213,18 +230,11 @@ export default function HeroSection() {
                   <SelectValue placeholder="Room type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="classique">Chambre Classique</SelectItem>
-                  <SelectItem value="superieure">Chambre Supérieure</SelectItem>
-                  <SelectItem value="premium">Chambre Premium</SelectItem>
-                  <SelectItem value="junior-suite">
-                    Suite Junior
-                  </SelectItem>
-                  <SelectItem value="romantique">
-                    Suite Romantique
-                  </SelectItem>
-                  <SelectItem value="familiale">
-                    Chambre Familiale
-                  </SelectItem>
+                  {roomOptions.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

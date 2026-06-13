@@ -17,12 +17,13 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: "MH HOTEL | Luxury Redefined",
+  title: "RODINA Hotel & SPA | L'Art de Vivre",
   description:
-    "Experience unparalleled luxury at MH Hotel. Discover elegantly designed rooms, world-class dining, rejuvenating spa treatments, and exceptional service in the heart of the city.",
+    "Découvrez le luxe inégalé au RODINA Hotel & SPA. Des chambres élégantes, une gastronomie de classe mondiale, des soins spa revitalisants et un service exceptionnel au cœur de la ville.",
   keywords: [
     "luxury hotel",
-    "MH Hotel",
+    "RODINA Hotel",
+    "hotel spa",
     "5-star hotel",
     "premium accommodation",
     "luxury spa",
@@ -30,14 +31,14 @@ export const metadata: Metadata = {
     "event venue",
     "boutique hotel",
   ],
-  authors: [{ name: "MH Hotel" }],
+  authors: [{ name: "RODINA Hotel & SPA" }],
   icons: {
     icon: "/favicon.ico",
   },
   openGraph: {
-    title: "MH HOTEL | Luxury Redefined",
+    title: "RODINA Hotel & SPA | L'Art de Vivre",
     description:
-      "Experience unparalleled luxury at MH Hotel. World-class rooms, dining, spa, and events.",
+      "Découvrez le luxe inégalé au RODINA Hotel & SPA. Chambres de luxe, gastronomie, spa et événements.",
     type: "website",
   },
 };
@@ -48,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning>
       <body
         className={`${playfair.variable} ${lato.variable} antialiased bg-background text-foreground`}
       >

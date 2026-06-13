@@ -67,7 +67,7 @@ export default function Footer() {
             {content?.footerCtaTitle || "Ready to Experience Luxury?"}
           </h3>
           <p className="text-charcoal/80 font-[var(--font-lato)] text-lg mb-6 max-w-xl mx-auto">
-            {content?.footerCtaText || "Book your stay today and discover why MH Hotel is the destination of choice for discerning travelers worldwide."}
+            {content?.footerCtaText || "Réservez votre séjour aujourd'hui et découvrez pourquoi RODINA Hotel & SPA est la destination de choix pour les voyageurs exigeants du monde entier."}
           </p>
           <button className="bg-charcoal text-gold px-8 py-3 rounded-full font-[var(--font-lato)] tracking-wider uppercase font-semibold hover:bg-charcoal/90 transition-colors">
             {content?.footerCtaButton || "Reserve Your Room"}
@@ -88,7 +88,7 @@ export default function Footer() {
               </div>
               <div>
                 <span className="text-xl tracking-[0.3em] font-[var(--font-playfair)] font-bold text-gold">
-                  {hotel?.name || "MH HOTEL"}
+                  {hotel?.name || "RODINA Hotel & SPA"}
                 </span>
                 <p className="text-[10px] tracking-[0.5em] uppercase text-white/40">
                   {hotel?.tagline || "Luxury Redefined"}
@@ -96,7 +96,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-white/60 font-[var(--font-lato)] leading-relaxed mb-6 max-w-sm">
-              {content?.footerDescription || "Where timeless elegance meets modern luxury. Since 2009, MH Hotel has been the pinnacle of sophisticated hospitality, offering unparalleled experiences in the heart of the city."}
+              {content?.footerDescription || "Là où l'élégance intemporelle rencontre le luxe moderne. RODINA Hotel & SPA est le sommet de l'hospitalité sophistiquée, offrant des expériences inégalées au cœur de la ville."}
             </p>
             <div className="flex gap-3">
               {socialLinks.map((socialItem) => (
@@ -177,7 +177,7 @@ export default function Footer() {
       <Separator className="bg-white/10" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="text-white/40 text-sm font-[var(--font-lato)]">
-          &copy; {new Date().getFullYear()} {hotel?.name || "MH Hotel"}. All rights reserved.
+          &copy; {new Date().getFullYear()} {hotel?.name || "RODINA Hotel & SPA"}. Tous droits réservés.
         </p>
         <div className="flex items-center gap-6">
           <a

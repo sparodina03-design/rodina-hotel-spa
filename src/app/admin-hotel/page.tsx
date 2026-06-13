@@ -139,7 +139,7 @@ export default function AdminLoginPage() {
 
         {/* Footer */}
         <p className="text-center text-white/20 text-xs font-[var(--font-lato)] mt-6">
-          MH Hotel &mdash; Panneau d&apos;administration
+          RODINA Hotel & SPA &mdash; Panneau d&apos;administration
         </p>
       </div>
     </div>

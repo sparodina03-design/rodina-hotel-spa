@@ -67,7 +67,7 @@ export default function SiteSettingsProvider({
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const res = await fetch("/api/admin/settings");
+        const res = await fetch("/api/settings");
         if (res.ok) {
           const data = await res.json();
           setSettings({ ...defaultSettings, ...data });

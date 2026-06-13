@@ -55,7 +55,7 @@ export default function EventsSection() {
             </h2>
             <div className="w-16 h-[2px] bg-gold mb-6" />
             <p className="text-white/70 leading-relaxed mb-10 font-[var(--font-lato)] text-lg">
-              From grand celebrations to corporate summits, MH Hotel provides
+              From grand celebrations to corporate summits, RODINA Hotel & SPA provides
               stunning venues and impeccable service to make every event
               extraordinary. Our dedicated events team ensures every detail is
               flawlessly executed.
@@ -105,7 +105,7 @@ export default function EventsSection() {
           >
             <img
               src="/images/conference-banquet.png"
-              alt="MH Hotel event space"
+              alt="RODINA Hotel & SPA event space"
               className="w-full h-[600px] object-cover rounded-2xl"
             />
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent h-1/3 rounded-b-2xl" />

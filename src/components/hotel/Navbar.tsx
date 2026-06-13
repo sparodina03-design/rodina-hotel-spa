@@ -58,7 +58,7 @@ export default function Navbar() {
                 scrolled ? "text-gold" : "text-white"
               )}
             >
-              {settings.hotel?.name || "MH HOTEL"}
+              {settings.hotel?.name || "RODINA Hotel & SPA"}
             </span>
             <span
               className={cn(
@@ -129,11 +129,11 @@ export default function Navbar() {
             className="bg-charcoal border-gold/20 w-80"
           >
             <VisuallyHidden>
-              <h2>{settings.hotel?.name || "MH Hotel"} Navigation Menu</h2>
+              <h2>{settings.hotel?.name || "RODINA Hotel & SPA"} Navigation Menu</h2>
             </VisuallyHidden>
             <div className="flex items-center justify-between mb-8">
               <span className="text-gold text-xl tracking-[0.3em] font-[var(--font-playfair)] font-bold">
-                {settings.hotel?.name || "MH HOTEL"}
+                {settings.hotel?.name || "RODINA Hotel & SPA"}
               </span>
             </div>
             <div className="flex flex-col gap-2">

@@ -91,7 +91,7 @@ export default function AmenitiesSection() {
           <div className="w-16 h-[2px] bg-gold mx-auto mb-6" />
           <p className="text-muted-foreground max-w-2xl mx-auto font-[var(--font-lato)] text-lg">
             Every detail is designed to elevate your stay. From wellness to
-            gastronomy, discover a world of exclusive amenities at MH Hotel.
+            gastronomy, discover a world of exclusive amenities at RODINA Hotel & SPA.
           </p>
         </motion.div>
 
