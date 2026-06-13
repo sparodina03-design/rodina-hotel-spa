@@ -7,11 +7,11 @@ const SESSIONS_FILE = path.join(process.cwd(), "data", "admin-sessions.json");
 
 const DEFAULT_SETTINGS: AdminSettings = {
   hotel: {
-    name: "MH HOTEL",
-    tagline: "Luxury Redefined",
+    name: "RODINA Hotel & SPA",
+    tagline: "L'Art de Vivre",
     description:
       "Where timeless elegance meets modern luxury. Experience a world of refined comfort, impeccable service, and unforgettable moments.",
-    logoLetter: "M",
+    logoLetter: "R",
   },
   currency: {
     code: "USD",
@@ -70,7 +70,7 @@ const DEFAULT_SETTINGS: AdminSettings = {
   },
   contact: {
     phone: "+1 (234) 567-890",
-    email: "info@mhhotel.com",
+    email: "info@rodinahotel.com",
     address: "City Center, Main Boulevard",
   },
   images: {
@@ -80,29 +80,29 @@ const DEFAULT_SETTINGS: AdminSettings = {
     spaMain: "/images/spa-treatment.png",
   },
   content: {
-    heroWelcome: "Welcome to",
-    heroTitle1: "MH",
-    heroTitle2: "HOTEL",
+    heroWelcome: "Bienvenue à",
+    heroTitle1: "RODINA",
+    heroTitle2: "Hotel & SPA",
     heroSubtitle:
-      "Where timeless elegance meets modern luxury. Experience a world of refined comfort, impeccable service, and unforgettable moments.",
-    aboutLabel: "Our Story",
-    aboutTitle1: "A Legacy of",
-    aboutTitle2: "Luxury",
+      "Là où l'élégance intemporelle rencontre le luxe moderne. Vivez un monde de confort raffiné, de service irréprochable et de moments inoubliables.",
+    aboutLabel: "Notre Histoire",
+    aboutTitle1: "Un Héritage de",
+    aboutTitle2: "Luxe",
     aboutP1:
-      "Since its inception, MH Hotel has been a beacon of sophistication and warmth in the heart of the city. Our commitment to excellence transcends ordinary hospitality, offering each guest a curated experience that blends timeless elegance with contemporary comfort.",
+      "Depuis sa création, RODINA Hotel & SPA est un phare de sophistication et de chaleur au cœur de la ville. Notre engagement envers l'excellence transcende l'hospitalité ordinaire, offrant à chaque invité une expérience sur mesure qui mêle élégance intemporelle et confort contemporain.",
     aboutP2:
-      "Every detail at MH Hotel has been thoughtfully crafted, from the hand-selected furnishings in our suites to the locally sourced ingredients in our restaurants. We believe that true luxury lies in the art of anticipation, where every need is met before it is expressed, and every moment becomes a cherished memory.",
+      "Chaque détail au RODINA Hotel & SPA a été pensé avec soin, des mobiliers sélectionnés avec goût dans nos suites aux ingrédients locaux de nos restaurants. Nous croyons que le véritable luxe réside dans l'art de l'anticipation, où chaque besoin est comblé avant même d'être exprimé, et chaque instant devient un souvenir précieux.",
     roomsLabel: "Hébergement",
     roomsTitle1: "Chambres &",
     roomsTitle2: "Suites",
     roomsSubtitle:
       "Chaque chambre et suite est un sanctuaire de confort, conçu avec une attention minutieuse aux détails et orné des plus beaux matériaux.",
-    footerCtaTitle: "Ready to Experience Luxury?",
+    footerCtaTitle: "Prêt à Vivre le Luxe ?",
     footerCtaText:
-      "Book your stay today and discover why MH Hotel is the destination of choice for discerning travelers worldwide.",
-    footerCtaButton: "Reserve Your Room",
+      "Réservez votre séjour aujourd'hui et découvrez pourquoi RODINA Hotel & SPA est la destination de choix pour les voyageurs exigeants du monde entier.",
+    footerCtaButton: "Réservez Votre Chambre",
     footerDescription:
-      "Where timeless elegance meets modern luxury. Since 2009, MH Hotel has been the pinnacle of sophisticated hospitality, offering unparalleled experiences in the heart of the city.",
+      "Là où l'élégance intemporelle rencontre le luxe moderne. RODINA Hotel & SPA est le sommet de l'hospitalité sophistiquée, offrant des expériences inégalées au cœur de la ville.",
   },
 };
 
