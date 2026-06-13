@@ -23,23 +23,23 @@ export default function DiningSection() {
           </h2>
           <div className="w-16 h-[2px] bg-gold mx-auto mb-6" />
           <p className="text-muted-foreground max-w-2xl mx-auto font-[var(--font-lato)] text-lg">
-            Embark on a culinary journey through our three signature restaurants,
+            Embark on a culinary journey through our signature restaurants,
             each offering a distinct atmosphere and exceptional cuisine.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Restaurant 1 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          {/* Restaurant 1 - Fine Dining (large card) */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0 }}
             viewport={{ once: true }}
-            className="group relative rounded-2xl overflow-hidden h-[500px] cursor-pointer"
+            className="group relative rounded-2xl overflow-hidden h-[520px] cursor-pointer"
           >
             <img
-              src="/images/seafood.png"
-              alt="The Goldfinch restaurant"
+              src="/images/fine-dining.png"
+              alt="The Goldfinch fine dining restaurant"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -52,8 +52,8 @@ export default function DiningSection() {
               </h3>
               <p className="text-white/70 font-[var(--font-lato)] mb-4 leading-relaxed">
                 Modern European cuisine reimagined by our Michelin-starred Chef.
-                An intimate setting with a curated wine cellar featuring over 500
-                labels from the world&apos;s finest vineyards.
+                An intimate setting with rose petal table settings, gold-rimmed
+                porcelain, and a curated wine cellar featuring over 500 labels.
               </p>
               <div className="flex items-center justify-between">
                 <span className="text-gold-light text-sm font-[var(--font-lato)]">
@@ -70,13 +70,13 @@ export default function DiningSection() {
             </div>
           </motion.div>
 
-          {/* Restaurant 2 */}
+          {/* Restaurant 2 - Sky Lounge */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
-            className="group relative rounded-2xl overflow-hidden h-[500px] cursor-pointer"
+            className="group relative rounded-2xl overflow-hidden h-[520px] cursor-pointer"
           >
             <img
               src="/images/terrace.png"
@@ -94,7 +94,7 @@ export default function DiningSection() {
               <p className="text-white/70 font-[var(--font-lato)] mb-4 leading-relaxed">
                 Handcrafted cocktails and Asian-fusion small plates served above
                 the city skyline. Live jazz performances every weekend under the
-                stars.
+                stars in our lush garden terrace setting.
               </p>
               <div className="flex items-center justify-between">
                 <span className="text-gold-light text-sm font-[var(--font-lato)]">
@@ -110,35 +110,78 @@ export default function DiningSection() {
               </div>
             </div>
           </motion.div>
+        </div>
 
-          {/* Restaurant 3 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Restaurant 3 - Rooftop Dining */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="group relative rounded-2xl overflow-hidden h-[500px] cursor-pointer"
+            className="group relative rounded-2xl overflow-hidden h-[400px] cursor-pointer"
           >
             <img
               src="/images/rooftop-dining.png"
-              alt="Azure terrace dining"
+              alt="Azure rooftop dining"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-8">
               <p className="text-gold text-xs tracking-[0.4em] uppercase mb-2 font-[var(--font-lato)]">
-                Terrace
+                Rooftop Dining
               </p>
               <h3 className="text-2xl font-[var(--font-playfair)] font-bold text-white mb-3">
                 Azure Terrace
               </h3>
               <p className="text-white/70 font-[var(--font-lato)] mb-4 leading-relaxed">
-                Relaxed terrace dining with Mediterranean-inspired dishes, fresh
-                seafood, and tropical cocktails. The perfect daytime escape.
+                Relaxed rooftop dining with Mediterranean-inspired dishes, fresh
+                seafood, and tropical cocktails. The perfect daytime escape with panoramic city views.
               </p>
               <div className="flex items-center justify-between">
                 <span className="text-gold-light text-sm font-[var(--font-lato)]">
                   Lunch: 11:00 AM - 5:00 PM
+                </span>
+                <Button
+                  variant="ghost"
+                  className="text-gold hover:text-gold-light p-0 font-[var(--font-lato)]"
+                >
+                  Reserve
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Restaurant 4 - Patisserie / Dessert */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="group relative rounded-2xl overflow-hidden h-[400px] cursor-pointer"
+          >
+            <img
+              src="/images/desserts.png"
+              alt="Patisserie desserts"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-8">
+              <p className="text-gold text-xs tracking-[0.4em] uppercase mb-2 font-[var(--font-lato)]">
+                Patisserie
+              </p>
+              <h3 className="text-2xl font-[var(--font-playfair)] font-bold text-white mb-3">
+                Le Jardin
+              </h3>
+              <p className="text-white/70 font-[var(--font-lato)] mb-4 leading-relaxed">
+                Indulge in our artisan patisserie featuring handcrafted desserts,
+                mirror-glazed creations, and signature pastries. Paired with
+                premium teas and coffees in an elegant setting.
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-gold-light text-sm font-[var(--font-lato)]">
+                  Daily: 10:00 AM - 10:00 PM
                 </span>
                 <Button
                   variant="ghost"

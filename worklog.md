@@ -94,3 +94,28 @@ Stage Summary:
 - All sections now use the most appropriate real photos
 - Gallery expanded to 16 items with full category coverage
 - Site fully verified with zero errors
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Add 3 more user photos (hotel exterior, fine dining, desserts)
+
+Work Log:
+- Analyzed 3 new images using VLM:
+  - 164544.png: Fine dining table with rose petals, gold plates, chocolate dessert
+  - 164617.png: Artisan mirror-glazed desserts with branded topper
+  - 164700.png: Hotel building exterior at dusk (RODINA branded)
+- Copied to public/images: fine-dining.png, desserts.png, hotel-exterior.png
+- Updated HeroSection: lobby.png → hotel-exterior.png (real hotel building!)
+- Rewrote DiningSection: Now 4 restaurants with new layout:
+  - The Goldfinch (fine-dining.png) + Sky Lounge (terrace.png) in top row
+  - Azure Terrace (rooftop-dining.png) + Le Jardin (desserts.png) in bottom row
+- Updated GallerySection: Expanded from 16 to 20 items with all new photos
+- Verified: All 39 images load, 0 broken, 20 gallery items, hero shows real hotel exterior
+
+Stage Summary:
+- Total unique real images: 17 (up from 14)
+- Hero now shows actual hotel building exterior
+- Dining section expanded to 4 restaurants with dedicated photos
+- Gallery now 20 items with full coverage
+- All verified with zero errors
