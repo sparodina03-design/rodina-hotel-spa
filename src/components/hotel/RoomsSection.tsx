@@ -23,7 +23,6 @@ const rooms = [
     priceSingle: 141,
     priceTriple: 202,
     totalRooms: 50,
-    size: "32 m²",
     bed: "Queen Bed",
     maxGuests: "1–3 Adultes",
     description:
@@ -38,7 +37,6 @@ const rooms = [
     price: 198,
     priceSingle: 167,
     totalRooms: 10,
-    size: "36 m²",
     bed: "Twin / Double",
     maxGuests: "1–2 Adultes",
     description:
@@ -54,7 +52,6 @@ const rooms = [
     price: 224,
     priceSingle: 193,
     totalRooms: 10,
-    size: "48 m²",
     bed: "King Bed",
     maxGuests: "1–2 Adultes",
     description:
@@ -76,7 +73,6 @@ const rooms = [
     price: 251,
     priceSingle: 220,
     totalRooms: 10,
-    size: "55 m²",
     bed: "King Bed + Salon",
     maxGuests: "1–2 Adultes",
     description:
@@ -97,7 +93,6 @@ const rooms = [
     image: "/images/room-romantic.png",
     price: 320,
     totalRooms: 5,
-    size: "55 m²",
     bed: "King Bed",
     maxGuests: "2 Adultes",
     description:
@@ -118,7 +113,6 @@ const rooms = [
     image: "/images/room-family.png",
     price: 280,
     totalRooms: 8,
-    size: "52 m²",
     bed: "Lits Triple",
     maxGuests: "3 Adultes",
     description:
@@ -214,7 +208,7 @@ export default function RoomsSection() {
                       {room.name}
                     </h3>
                     <p className="text-white/70 text-sm font-[var(--font-lato)]">
-                      {room.size} &bull; {room.bed}
+                      {room.bed}
                     </p>
                   </div>
                   <div className="text-right">

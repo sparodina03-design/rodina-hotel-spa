@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Lato } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import KeyboardShortcuts from "@/components/KeyboardShortcuts";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -55,6 +56,7 @@ export default function RootLayout({
       >
         {children}
         <Toaster />
+        <KeyboardShortcuts />
       </body>
     </html>
   );

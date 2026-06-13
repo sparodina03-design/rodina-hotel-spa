@@ -1,0 +1,1002 @@
+     1→"use client";
+     2→
+     3→import { useState, useEffect, createContext, useContext } from "react";
+     4→import { useRouter } from "next/navigation";
+     5→import type { AdminSettings } from "@/lib/admin-settings";
+     6→import {
+     7→  Hotel,
+     8→  BedDouble,
+     9→  Coins,
+    10→  Share2,
+    11→  Phone,
+    12→  Image,
+    13→  FileText,
+    14→  KeyRound,
+    15→  LogOut,
+    16→  Menu,
+    17→  X,
+    18→  ChevronRight,
+    19→} from "lucide-react";
+    20→import { Button } from "@/components/ui/button";
+    21→import { Input } from "@/components/ui/input";
+    22→import {
+    23→  Select,
+    24→  SelectContent,
+    25→  SelectItem,
+    26→  SelectTrigger,
+    27→  SelectValue,
+    28→} from "@/components/ui/select";
+    29→import { Eye, EyeOff, ShieldCheck, AlertTriangle, Lock } from "lucide-react";
+    30→
+    31→type AdminTab =
+    32→  | "hotel"
+    33→  | "rooms"
+    34→  | "currency"
+    35→  | "social"
+    36→  | "contact"
+    37→  | "images"
+    38→  | "content"
+    39→  | "password";
+    40→
+    41→interface AdminContextType {
+    42→  settings: AdminSettings;
+    43→  setSettings: (s: AdminSettings) => void;
+    44→  refreshSettings: () => Promise<void>;
+    45→}
+    46→
+    47→export const AdminContext = createContext<AdminContextType>({
+    48→  settings: {} as AdminSettings,
+    49→  setSettings: () => {},
+    50→  refreshSettings: async () => {},
+    51→});
+    52→
+    53→export const useAdmin = () => useContext(AdminContext);
+    54→
+    55→// Custom hook to sync form state with server data
+    56→// Uses useEffect internally to subscribe to changes
+    57→function useSyncedState<T>(serverValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
+    58→  const [state, setState] = useState(serverValue);
+    59→  
+    60→  useEffect(() => {
+    61→    setState(serverValue);
+    62→  }, [serverValue]);
+    63→  
+    64→  return [state, setState];
+    65→}
+    66→
+    67→const tabs: { id: AdminTab; label: string; icon: React.ElementType }[] = [
+    68→  { id: "hotel", label: "Hôtel", icon: Hotel },
+    69→  { id: "rooms", label: "Chambres", icon: BedDouble },
+    70→  { id: "currency", label: "Devise", icon: Coins },
+    71→  { id: "social", label: "Réseaux Sociaux", icon: Share2 },
+    72→  { id: "contact", label: "Contact", icon: Phone },
+    73→  { id: "images", label: "Images", icon: Image },
+    74→  { id: "content", label: "Contenu", icon: FileText },
+    75→  { id: "password", label: "Mot de Passe", icon: KeyRound },
+    76→];
+    77→
+    78→export default function DashboardLayout({
+    79→  children,
+    80→}: {
+    81→  children: React.ReactNode;
+    82→}) {
+    83→  const router = useRouter();
+    84→  const [settings, setSettings] = useState<AdminSettings>({} as AdminSettings);
+    85→  const [activeTab, setActiveTab] = useState<AdminTab>("hotel");
+    86→  const [sidebarOpen, setSidebarOpen] = useState(false);
+    87→  const [loading, setLoading] = useState(true);
+    88→  const [saving, setSaving] = useState(false);
+    89→  const [saveMessage, setSaveMessage] = useState("");
+    90→
+    91→  const refreshSettings = async () => {
+    92→    try {
+    93→      const res = await fetch("/api/admin/settings");
+    94→      if (res.ok) {
+    95→        const data = await res.json();
+    96→        setSettings(data);
+    97→      } else {
+    98→        router.push("/admin-hotel");
+    99→      }
+   100→    } catch {
+   101→      router.push("/admin-hotel");
+   102→    }
+   103→  };
+   104→
+   105→  useEffect(() => {
+   106→    const init = async () => {
+   107→      await refreshSettings();
+   108→      setLoading(false);
+   109→    };
+   110→    init();
+   111→  }, []);
+   112→
+   113→  const handleSave = async (partial: Partial<AdminSettings>) => {
+   114→    setSaving(true);
+   115→    setSaveMessage("");
+   116→    try {
+   117→      const res = await fetch("/api/admin/settings", {
+   118→        method: "PUT",
+   119→        headers: { "Content-Type": "application/json" },
+   120→        body: JSON.stringify(partial),
+   121→      });
+   122→      if (res.ok) {
+   123→        const data = await res.json();
+   124→        setSettings(data.settings);
+   125→        setSaveMessage("Enregistré avec succès !");
+   126→        setTimeout(() => setSaveMessage(""), 3000);
+   127→      }
+   128→    } catch {
+   129→      setSaveMessage("Erreur lors de l'enregistrement");
+   130→    } finally {
+   131→      setSaving(false);
+   132→    }
+   133→  };
+   134→
+   135→  const handleLogout = async () => {
+   136→    try {
+   137→      document.cookie = "admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+   138→      router.push("/admin-hotel");
+   139→    } catch {
+   140→      router.push("/admin-hotel");
+   141→    }
+   142→  };
+   143→
+   144→  if (loading) {
+   145→    return (
+   146→      <div className="min-h-screen bg-charcoal flex items-center justify-center">
+   147→        <div className="text-center">
+   148→          <div className="w-12 h-12 rounded-full gold-gradient flex items-center justify-center mx-auto mb-4 animate-pulse">
+   149→            <Hotel className="w-6 h-6 text-charcoal" />
+   150→          </div>
+   151→          <p className="text-white/50 font-[var(--font-lato)]">Chargement...</p>
+   152→        </div>
+   153→      </div>
+   154→    );
+   155→  }
+   156→
+   157→  return (
+   158→    <AdminContext.Provider value={{ settings, setSettings, refreshSettings }}>
+   159→      <div className="min-h-screen bg-[#0f1117] flex">
+   160→        {/* Sidebar Overlay (mobile) */}
+   161→        {sidebarOpen && (
+   162→          <div
+   163→            className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+   164→            onClick={() => setSidebarOpen(false)}
+   165→          />
+   166→        )}
+   167→
+   168→        {/* Sidebar */}
+   169→        <aside
+   170→          className={`fixed lg:static top-0 left-0 h-full w-64 bg-[#161822] border-r border-gold/10 z-50 transition-transform duration-300 ${
+   171→            sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+   172→          }`}
+   173→        >
+   174→          <div className="p-5 border-b border-gold/10">
+   175→            <div className="flex items-center justify-between">
+   176→              <div className="flex items-center gap-3">
+   177→                <div className="w-9 h-9 rounded-lg gold-gradient flex items-center justify-center">
+   178→                  <span className="text-charcoal font-bold text-sm font-[var(--font-playfair)]">
+   179→                    {settings.hotel?.logoLetter || "M"}
+   180→                  </span>
+   181→                </div>
+   182→                <div>
+   183→                  <p className="text-gold font-[var(--font-playfair)] font-bold text-sm">
+   184→                    Admin
+   185→                  </p>
+   186→                  <p className="text-white/30 text-[10px] font-[var(--font-lato)]">
+   187→                    Panneau de contrôle
+   188→                  </p>
+   189→                </div>
+   190→              </div>
+   191→              <button
+   192→                onClick={() => setSidebarOpen(false)}
+   193→                className="lg:hidden text-white/50 hover:text-white"
+   194→              >
+   195→                <X className="w-5 h-5" />
+   196→              </button>
+   197→            </div>
+   198→          </div>
+   199→
+   200→          <nav className="p-3 space-y-1">
+   201→            {tabs.map((tab) => (
+   202→              <button
+   203→                key={tab.id}
+   204→                onClick={() => {
+   205→                  setActiveTab(tab.id);
+   206→                  setSidebarOpen(false);
+   207→                }}
+   208→                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all font-[var(--font-lato)] ${
+   209→                  activeTab === tab.id
+   210→                    ? "bg-gold/10 text-gold border border-gold/20"
+   211→                    : "text-white/50 hover:text-white/80 hover:bg-white/5 border border-transparent"
+   212→                }`}
+   213→              >
+   214→                <tab.icon className="w-4 h-4 flex-shrink-0" />
+   215→                <span className="flex-1 text-left">{tab.label}</span>
+   216→                {activeTab === tab.id && (
+   217→                  <ChevronRight className="w-3 h-3" />
+   218→                )}
+   219→              </button>
+   220→            ))}
+   221→          </nav>
+   222→
+   223→          <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-gold/10">
+   224→            <button
+   225→              onClick={handleLogout}
+   226→              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-400/70 hover:text-red-400 hover:bg-red-500/10 transition-all font-[var(--font-lato)]"
+   227→            >
+   228→              <LogOut className="w-4 h-4" />
+   229→              Déconnexion
+   230→            </button>
+   231→          </div>
+   232→        </aside>
+   233→
+   234→        {/* Main Content */}
+   235→        <div className="flex-1 min-h-screen">
+   236→          {/* Top Bar */}
+   237→          <header className="sticky top-0 z-30 bg-[#161822]/90 backdrop-blur-md border-b border-gold/10 px-4 sm:px-6 py-3">
+   238→            <div className="flex items-center justify-between">
+   239→              <div className="flex items-center gap-3">
+   240→                <button
+   241→                  onClick={() => setSidebarOpen(true)}
+   242→                  className="lg:hidden text-white/60 hover:text-white"
+   243→                >
+   244→                  <Menu className="w-5 h-5" />
+   245→                </button>
+   246→                <h2 className="text-white font-[var(--font-playfair)] font-bold">
+   247→                  {tabs.find((t) => t.id === activeTab)?.label}
+   248→                </h2>
+   249→              </div>
+   250→              <div className="flex items-center gap-3">
+   251→                {saveMessage && (
+   252→                  <span className="text-green-400 text-xs font-[var(--font-lato)] animate-pulse">
+   253→                    {saveMessage}
+   254→                  </span>
+   255→                )}
+   256→                <a
+   257→                  href="/"
+   258→                  target="_blank"
+   259→                  className="text-white/40 hover:text-gold text-xs font-[var(--font-lato)] transition-colors"
+   260→                >
+   261→                  Voir le site →
+   262→                </a>
+   263→              </div>
+   264→            </div>
+   265→          </header>
+   266→
+   267→          {/* Page Content */}
+   268→          <main className="p-4 sm:p-6 max-w-5xl">
+   269→            <AdminPanelRouter
+   270→              activeTab={activeTab}
+   271→              saving={saving}
+   272→              onSave={handleSave}
+   273→            />
+   274→          </main>
+   275→        </div>
+   276→      </div>
+   277→    </AdminContext.Provider>
+   278→  );
+   279→}
+   280→
+   281→// Router that renders the correct tab
+   282→function AdminPanelRouter({
+   283→  activeTab,
+   284→  saving,
+   285→  onSave,
+   286→}: {
+   287→  activeTab: AdminTab;
+   288→  saving: boolean;
+   289→  onSave: (partial: Partial<AdminSettings>) => Promise<void>;
+   290→}) {
+   291→  const { settings } = useAdmin();
+   292→
+   293→  const props = { settings, saving, onSave };
+   294→
+   295→  switch (activeTab) {
+   296→    case "hotel":
+   297→      return <HotelPanel {...props} />;
+   298→    case "rooms":
+   299→      return <RoomsPanel {...props} />;
+   300→    case "currency":
+   301→      return <CurrencyPanel {...props} />;
+   302→    case "social":
+   303→      return <SocialPanel {...props} />;
+   304→    case "contact":
+   305→      return <ContactPanel {...props} />;
+   306→    case "images":
+   307→      return <ImagesPanel {...props} />;
+   308→    case "content":
+   309→      return <ContentPanel {...props} />;
+   310→    case "password":
+   311→      return <PasswordPanel />;
+   312→    default:
+   313→      return <HotelPanel {...props} />;
+   314→  }
+   315→}
+   316→
+   317→// ============ PANEL COMPONENTS ============
+   318→
+   319→function SaveButton({ saving, onClick }: { saving: boolean; onClick: () => void }) {
+   320→  return (
+   321→    <Button
+   322→      onClick={onClick}
+   323→      disabled={saving}
+   324→      className="gold-gradient text-charcoal font-semibold tracking-wider uppercase hover:opacity-90 font-[var(--font-lato)] text-sm"
+   325→    >
+   326→      {saving ? "Enregistrement..." : "Enregistrer"}
+   327→    </Button>
+   328→  );
+   329→}
+   330→
+   331→function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
+   332→  return (
+   333→    <div className="bg-[#1a1d2e] border border-gold/10 rounded-xl p-5 mb-6">
+   334→      <h3 className="text-gold font-[var(--font-playfair)] font-bold mb-4">{title}</h3>
+   335→      {children}
+   336→    </div>
+   337→  );
+   338→}
+   339→
+   340→function FormField({
+   341→  label,
+   342→  value,
+   343→  onChange,
+   344→  type = "text",
+   345→  placeholder,
+   346→}: {
+   347→  label: string;
+   348→  value: string | number;
+   349→  onChange: (val: string) => void;
+   350→  type?: string;
+   351→  placeholder?: string;
+   352→}) {
+   353→  return (
+   354→    <div className="space-y-1.5">
+   355→      <label className="text-white/50 text-xs tracking-wider uppercase font-[var(--font-lato)]">
+   356→        {label}
+   357→      </label>
+   358→      <Input
+   359→        type={type}
+   360→        value={value}
+   361→        onChange={(e) => onChange(e.target.value)}
+   362→        placeholder={placeholder}
+   363→        className="bg-white/5 border-gold/15 text-white hover:border-gold/30 focus:border-gold/50 font-[var(--font-lato)] text-sm"
+   364→      />
+   365→    </div>
+   366→  );
+   367→}
+   368→
+   369→// --- HOTEL PANEL ---
+   370→function HotelPanel({
+   371→  settings,
+   372→  saving,
+   373→  onSave,
+   374→}: {
+   375→  settings: AdminSettings;
+   376→  saving: boolean;
+   377→  onSave: (p: Partial<AdminSettings>) => Promise<void>;
+   378→}) {
+   379→  const [form, setForm] = useSyncedState(settings.hotel || {});
+   380→
+   381→  const handleSave = () => onSave({ hotel: form });
+   382→
+   383→  return (
+   384→    <>
+   385→      <SectionCard title="Informations de l'Hôtel">
+   386→        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+   387→          <FormField label="Nom de l'hôtel" value={form.name || ""} onChange={(v) => setForm({ ...form, name: v })} placeholder="RODINA Hotel & SPA" />
+   388→          <FormField label="Slogan" value={form.tagline || ""} onChange={(v) => setForm({ ...form, tagline: v })} placeholder="Luxury Redefined" />
+   389→          <FormField label="Lettre du logo" value={form.logoLetter || ""} onChange={(v) => setForm({ ...form, logoLetter: v })} placeholder="M" />
+   390→        </div>
+   391→        <div className="mt-4">
+   392→          <FormField label="Description" value={form.description || ""} onChange={(v) => setForm({ ...form, description: v })} placeholder="Description de l'hôtel..." />
+   393→        </div>
+   394→      </SectionCard>
+   395→      <div className="flex justify-end">
+   396→        <SaveButton saving={saving} onClick={handleSave} />
+   397→      </div>
+   398→    </>
+   399→  );
+   400→}
+   401→
+   402→// --- ROOMS PANEL ---
+   403→function RoomsPanel({
+   404→  settings,
+   405→  saving,
+   406→  onSave,
+   407→}: {
+   408→  settings: AdminSettings;
+   409→  saving: boolean;
+   410→  onSave: (p: Partial<AdminSettings>) => Promise<void>;
+   411→}) {
+   412→  const [rooms, setRooms] = useSyncedState(settings.rooms || []);
+   413→
+   414→  const updateRoom = (index: number, field: string, value: string | number) => {
+   415→    const updated = [...rooms];
+   416→    updated[index] = { ...updated[index], [field]: value };
+   417→    setRooms(updated);
+   418→  };
+   419→
+   420→  const handleSave = () => onSave({ rooms });
+   421→
+   422→  return (
+   423→    <>
+   424→      {rooms.map((room, i) => (
+   425→        <SectionCard key={room.id} title={`${room.name} (${room.id})`}>
+   426→          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+   427→            <FormField label="Nom" value={room.name} onChange={(v) => updateRoom(i, "name", v)} />
+   428→            <FormField
+   429→              label={`Prix/nuit (${settings.currency?.symbol || "$"})`}
+   430→              value={room.price}
+   431→              type="number"
+   432→              onChange={(v) => updateRoom(i, "price", Number(v))}
+   433→            />
+   434→            {room.priceSingle !== undefined && (
+   435→              <FormField
+   436→                label="Prix 1 pers."
+   437→                value={room.priceSingle}
+   438→                type="number"
+   439→                onChange={(v) => updateRoom(i, "priceSingle", Number(v))}
+   440→              />
+   441→            )}
+   442→            {room.priceTriple !== undefined && (
+   443→              <FormField
+   444→                label="Prix 3 pers."
+   445→                value={room.priceTriple}
+   446→                type="number"
+   447→                onChange={(v) => updateRoom(i, "priceTriple", Number(v))}
+   448→              />
+   449→            )}
+   450→            <FormField
+   451→              label="Nombre de chambres"
+   452→              value={room.totalRooms}
+   453→              type="number"
+   454→              onChange={(v) => updateRoom(i, "totalRooms", Number(v))}
+   455→            />
+   456→          </div>
+   457→        </SectionCard>
+   458→      ))}
+   459→      <div className="flex justify-end">
+   460→        <SaveButton saving={saving} onClick={handleSave} />
+   461→      </div>
+   462→    </>
+   463→  );
+   464→}
+   465→
+   466→// --- CURRENCY PANEL ---
+   467→const popularCurrencies = [
+   468→  { code: "MAD", symbol: "MAD", name: "Dirham marocain" },
+   469→  { code: "EUR", symbol: "€", name: "Euro" },
+   470→  { code: "USD", symbol: "$", name: "Dollar américain" },
+   471→  { code: "GBP", symbol: "£", name: "Livre sterling" },
+   472→  { code: "AED", symbol: "د.إ", name: "Dirham émirati" },
+   473→  { code: "SAR", symbol: "﷼", name: "Riyal saoudien" },
+   474→  { code: "TRY", symbol: "₺", name: "Livre turque" },
+   475→  { code: "CHF", symbol: "CHF", name: "Franc suisse" },
+   476→  { code: "CAD", symbol: "CA$", name: "Dollar canadien" },
+   477→  { code: "AUD", symbol: "A$", name: "Dollar australien" },
+   478→  { code: "JPY", symbol: "¥", name: "Yen japonais" },
+   479→  { code: "CNY", symbol: "¥", name: "Yuan chinois" },
+   480→  { code: "INR", symbol: "₹", name: "Roupie indienne" },
+   481→  { code: "BRL", symbol: "R$", name: "Real brésilien" },
+   482→  { code: "ZAR", symbol: "R", name: "Rand sud-africain" },
+   483→  { code: "EGP", symbol: "E£", name: "Livre égyptienne" },
+   484→  { code: "TND", symbol: "د.ت", name: "Dinar tunisien" },
+   485→  { code: "DZD", symbol: "د.ج", name: "Dinar algérien" },
+   486→  { code: "QAR", symbol: "﷼", name: "Riyal qatari" },
+   487→  { code: "KWD", symbol: "د.ك", name: "Dinar koweïtien" },
+   488→];
+   489→
+   490→function CurrencyPanel({
+   491→  settings,
+   492→  saving,
+   493→  onSave,
+   494→}: {
+   495→  settings: AdminSettings;
+   496→  saving: boolean;
+   497→  onSave: (p: Partial<AdminSettings>) => Promise<void>;
+   498→}) {
+   499→  const [form, setForm] = useSyncedState(settings.currency || { code: "USD", symbol: "$", taxRate: 9 });
+   500→
+   501→  const handleCurrencySelect = (code: string) => {
+   502→    const currency = popularCurrencies.find((c) => c.code === code);
+   503→    if (currency) {
+   504→      setForm({ ...form, code: currency.code, symbol: currency.symbol });
+   505→    }
+   506→  };
+   507→
+   508→  const handleSave = () => onSave({ currency: form });
+   509→
+   510→  // Preview: how prices will look
+   511→  const previewPrice = (amount: number) => {
+   512→    return `${form.symbol}${amount}`;
+   513→  };
+   514→
+   515→  return (
+   516→    <>
+   517→      <SectionCard title="Devise & Taxes">
+   518→        {/* Quick Currency Selector */}
+   519→        <div className="space-y-1.5 mb-5">
+   520→          <label className="text-white/50 text-xs tracking-wider uppercase font-[var(--font-lato)]">
+   521→            Choisir une devise
+   522→          </label>
+   523→          <Select value={form.code} onValueChange={handleCurrencySelect}>
+   524→            <SelectTrigger className="bg-white/5 border-gold/15 text-white hover:border-gold/30 focus:border-gold/50 font-[var(--font-lato)] text-sm">
+   525→              <SelectValue placeholder="Sélectionner une devise" />
+   526→            </SelectTrigger>
+   527→            <SelectContent className="bg-[#1a1d2e] border-gold/20 max-h-64">
+   528→              {popularCurrencies.map((currency) => (
+   529→                <SelectItem
+   530→                  key={currency.code}
+   531→                  value={currency.code}
+   532→                  className="text-white/80 hover:text-gold hover:bg-gold/10 focus:text-gold focus:bg-gold/10 font-[var(--font-lato)]"
+   533→                >
+   534→                  <span className="flex items-center gap-2">
+   535→                    <span className="text-gold font-semibold w-10">{currency.symbol}</span>
+   536→                    <span>{currency.code}</span>
+   537→                    <span className="text-white/40 text-xs">— {currency.name}</span>
+   538→                  </span>
+   539→                </SelectItem>
+   540→              ))}
+   541→            </SelectContent>
+   542→          </Select>
+   543→        </div>
+   544→
+   545→        {/* Manual Override */}
+   546→        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+   547→          <FormField label="Code devise" value={form.code} onChange={(v) => setForm({ ...form, code: v.toUpperCase() })} placeholder="USD" />
+   548→          <FormField label="Symbole" value={form.symbol} onChange={(v) => setForm({ ...form, symbol: v })} placeholder="$" />
+   549→          <FormField label="Taux de taxe (%)" value={form.taxRate} type="number" onChange={(v) => setForm({ ...form, taxRate: Number(v) })} />
+   550→        </div>
+   551→
+   552→        {/* Live Preview */}
+   553→        <div className="mt-5 p-4 bg-white/5 rounded-xl border border-gold/10">
+   554→          <p className="text-white/40 text-xs tracking-wider uppercase font-[var(--font-lato)] mb-3">
+   555→            Aperçu en direct
+   556→          </p>
+   557→          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+   558→            {settings.rooms?.slice(0, 3).map((room) => (
+   559→              <div key={room.id} className="text-center p-2 bg-white/5 rounded-lg">
+   560→                <p className="text-white/60 text-xs font-[var(--font-lato)]">{room.name}</p>
+   561→                <p className="text-gold text-lg font-[var(--font-playfair)] font-bold">
+   562→                  {previewPrice(room.price)}
+   563→                </p>
+   564→                <p className="text-white/30 text-[10px] font-[var(--font-lato)]">/nuit + {form.taxRate}% tax</p>
+   565→              </div>
+   566→            ))}
+   567→          </div>
+   568→        </div>
+   569→      </SectionCard>
+   570→      <div className="flex justify-end">
+   571→        <SaveButton saving={saving} onClick={handleSave} />
+   572→      </div>
+   573→    </>
+   574→  );
+   575→}
+   576→
+   577→// --- SOCIAL PANEL ---
+   578→function SocialPanel({
+   579→  settings,
+   580→  saving,
+   581→  onSave,
+   582→}: {
+   583→  settings: AdminSettings;
+   584→  saving: boolean;
+   585→  onSave: (p: Partial<AdminSettings>) => Promise<void>;
+   586→}) {
+   587→  const [form, setForm] = useSyncedState(settings.social || {});
+   588→
+   589→  const handleSave = () => onSave({ social: form });
+   590→
+   591→  return (
+   592→    <>
+   593→      <SectionCard title="Réseaux Sociaux">
+   594→        <div className="space-y-4">
+   595→          <FormField label="Facebook" value={form.facebook || ""} onChange={(v) => setForm({ ...form, facebook: v })} placeholder="https://facebook.com/..." />
+   596→          <FormField label="Instagram" value={form.instagram || ""} onChange={(v) => setForm({ ...form, instagram: v })} placeholder="https://instagram.com/..." />
+   597→          <FormField label="WhatsApp" value={form.whatsapp || ""} onChange={(v) => setForm({ ...form, whatsapp: v })} placeholder="https://wa.me/..." />
+   598→          <FormField label="TikTok" value={form.tiktok || ""} onChange={(v) => setForm({ ...form, tiktok: v })} placeholder="https://tiktok.com/..." />
+   599→          <FormField label="YouTube" value={form.youtube || ""} onChange={(v) => setForm({ ...form, youtube: v })} placeholder="https://youtube.com/..." />
+   600→        </div>
+   601→      </SectionCard>
+   602→      <div className="flex justify-end">
+   603→        <SaveButton saving={saving} onClick={handleSave} />
+   604→      </div>
+   605→    </>
+   606→  );
+   607→}
+   608→
+   609→// --- CONTACT PANEL ---
+   610→function ContactPanel({
+   611→  settings,
+   612→  saving,
+   613→  onSave,
+   614→}: {
+   615→  settings: AdminSettings;
+   616→  saving: boolean;
+   617→  onSave: (p: Partial<AdminSettings>) => Promise<void>;
+   618→}) {
+   619→  const [form, setForm] = useSyncedState(settings.contact || {});
+   620→
+   621→  const handleSave = () => onSave({ contact: form });
+   622→
+   623→  return (
+   624→    <>
+   625→      <SectionCard title="Informations de Contact">
+   626→        <div className="space-y-4">
+   627→          <FormField label="Téléphone" value={form.phone || ""} onChange={(v) => setForm({ ...form, phone: v })} placeholder="+1 (234) 567-890" />
+   628→          <FormField label="Email" value={form.email || ""} onChange={(v) => setForm({ ...form, email: v })} placeholder="info@mhhotel.com" />
+   629→          <FormField label="Adresse" value={form.address || ""} onChange={(v) => setForm({ ...form, address: v })} placeholder="City Center, Main Boulevard" />
+   630→        </div>
+   631→      </SectionCard>
+   632→      <div className="flex justify-end">
+   633→        <SaveButton saving={saving} onClick={handleSave} />
+   634→      </div>
+   635→    </>
+   636→  );
+   637→}
+   638→
+   639→// --- IMAGES PANEL ---
+   640→function ImagesPanel({
+   641→  settings,
+   642→  saving,
+   643→  onSave,
+   644→}: {
+   645→  settings: AdminSettings;
+   646→  saving: boolean;
+   647→  onSave: (p: Partial<AdminSettings>) => Promise<void>;
+   648→}) {
+   649→  const [form, setForm] = useSyncedState(settings.images || {});
+   650→
+   651→  const handleSave = () => onSave({ images: form });
+   652→
+   653→  const imageFields = [
+   654→    { key: "heroBg", label: "Image Hero (arrière-plan)" },
+   655→    { key: "aboutMain", label: "Image principale (À propos)" },
+   656→    { key: "aboutInset", label: "Image secondaire (À propos)" },
+   657→    { key: "spaMain", label: "Image Spa" },
+   658→  ];
+   659→
+   660→  return (
+   661→    <>
+   662→      <SectionCard title="Images Principales">
+   663→        <div className="space-y-4">
+   664→          {imageFields.map((field) => (
+   665→            <div key={field.key} className="space-y-1.5">
+   666→              <label className="text-white/50 text-xs tracking-wider uppercase font-[var(--font-lato)]">
+   667→                {field.label}
+   668→              </label>
+   669→              <div className="flex items-center gap-3">
+   670→                {form[field.key as keyof typeof form] && (
+   671→                  <div className="w-16 h-12 rounded-lg overflow-hidden flex-shrink-0 border border-gold/10">
+   672→                    <img
+   673→                      src={form[field.key as keyof typeof form] as string}
+   674→                      alt={field.label}
+   675→                      className="w-full h-full object-cover"
+   676→                    />
+   677→                  </div>
+   678→                )}
+   679→                <Input
+   680→                  value={(form[field.key as keyof typeof form] as string) || ""}
+   681→                  onChange={(e) => setForm({ ...form, [field.key]: e.target.value })}
+   682→                  placeholder="/images/example.png"
+   683→                  className="bg-white/5 border-gold/15 text-white hover:border-gold/30 focus:border-gold/50 font-[var(--font-lato)] text-sm flex-1"
+   684→                />
+   685→              </div>
+   686→            </div>
+   687→          ))}
+   688→        </div>
+   689→      </SectionCard>
+   690→      <div className="flex justify-end">
+   691→        <SaveButton saving={saving} onClick={handleSave} />
+   692→      </div>
+   693→    </>
+   694→  );
+   695→}
+   696→
+   697→// --- CONTENT PANEL ---
+   698→function ContentPanel({
+   699→  settings,
+   700→  saving,
+   701→  onSave,
+   702→}: {
+   703→  settings: AdminSettings;
+   704→  saving: boolean;
+   705→  onSave: (p: Partial<AdminSettings>) => Promise<void>;
+   706→}) {
+   707→  const [form, setForm] = useSyncedState(settings.content || {});
+   708→
+   709→  const handleSave = () => onSave({ content: form });
+   710→
+   711→  const sections = [
+   712→    {
+   713→      title: "Section Hero",
+   714→      fields: [
+   715→        { key: "heroWelcome", label: "Texte de bienvenue" },
+   716→        { key: "heroTitle1", label: "Titre partie 1" },
+   717→        { key: "heroTitle2", label: "Titre partie 2" },
+   718→        { key: "heroSubtitle", label: "Sous-titre" },
+   719→      ],
+   720→    },
+   721→    {
+   722→      title: "Section À Propos",
+   723→      fields: [
+   724→        { key: "aboutLabel", label: "Label" },
+   725→        { key: "aboutTitle1", label: "Titre partie 1" },
+   726→        { key: "aboutTitle2", label: "Titre partie 2" },
+   727→        { key: "aboutP1", label: "Paragraphe 1" },
+   728→        { key: "aboutP2", label: "Paragraphe 2" },
+   729→      ],
+   730→    },
+   731→    {
+   732→      title: "Section Chambres",
+   733→      fields: [
+   734→        { key: "roomsLabel", label: "Label" },
+   735→        { key: "roomsTitle1", label: "Titre partie 1" },
+   736→        { key: "roomsTitle2", label: "Titre partie 2" },
+   737→        { key: "roomsSubtitle", label: "Sous-titre" },
+   738→      ],
+   739→    },
+   740→    {
+   741→      title: "Footer",
+   742→      fields: [
+   743→        { key: "footerCtaTitle", label: "Titre CTA" },
+   744→        { key: "footerCtaText", label: "Texte CTA" },
+   745→        { key: "footerCtaButton", label: "Bouton CTA" },
+   746→        { key: "footerDescription", label: "Description" },
+   747→      ],
+   748→    },
+   749→  ];
+   750→
+   751→  return (
+   752→    <>
+   753→      {sections.map((section) => (
+   754→        <SectionCard key={section.title} title={section.title}>
+   755→          <div className="space-y-4">
+   756→            {section.fields.map((field) => (
+   757→              <FormField
+   758→                key={field.key}
+   759→                label={field.label}
+   760→                value={(form[field.key as keyof typeof form] as string) || ""}
+   761→                onChange={(v) => setForm({ ...form, [field.key]: v })}
+   762→              />
+   763→            ))}
+   764→          </div>
+   765→        </SectionCard>
+   766→      ))}
+   767→      <div className="flex justify-end">
+   768→        <SaveButton saving={saving} onClick={handleSave} />
+   769→      </div>
+   770→    </>
+   771→  );
+   772→}
+   773→
+   774→// --- PASSWORD PANEL ---
+   775→function getPasswordStrength(password: string): { level: number; label: string; color: string } {
+   776→  if (!password) return { level: 0, label: "", color: "" };
+   777→  let score = 0;
+   778→  if (password.length >= 6) score++;
+   779→  if (password.length >= 10) score++;
+   780→  if (/[A-Z]/.test(password)) score++;
+   781→  if (/[0-9]/.test(password)) score++;
+   782→  if (/[^A-Za-z0-9]/.test(password)) score++;
+   783→
+   784→  if (score <= 1) return { level: 1, label: "Faible", color: "bg-red-500" };
+   785→  if (score <= 2) return { level: 2, label: "Moyen", color: "bg-orange-500" };
+   786→  if (score <= 3) return { level: 3, label: "Bon", color: "bg-yellow-500" };
+   787→  if (score <= 4) return { level: 4, label: "Fort", color: "bg-green-400" };
+   788→  return { level: 5, label: "Très fort", color: "bg-green-500" };
+   789→}
+   790→
+   791→function PasswordPanel() {
+   792→  const [currentPassword, setCurrentPassword] = useState("");
+   793→  const [newPassword, setNewPassword] = useState("");
+   794→  const [confirmPassword, setConfirmPassword] = useState("");
+   795→  const [message, setMessage] = useState("");
+   796→  const [error, setError] = useState("");
+   797→  const [loading, setLoading] = useState(false);
+   798→  const [showCurrent, setShowCurrent] = useState(false);
+   799→  const [showNew, setShowNew] = useState(false);
+   800→  const [showConfirm, setShowConfirm] = useState(false);
+   801→
+   802→  const strength = getPasswordStrength(newPassword);
+   803→  const passwordsMatch = newPassword && confirmPassword && newPassword === confirmPassword;
+   804→  const passwordsMismatch = confirmPassword && newPassword !== confirmPassword;
+   805→
+   806→  const handleChangePassword = async () => {
+   807→    setError("");
+   808→    setMessage("");
+   809→
+   810→    if (newPassword !== confirmPassword) {
+   811→      setError("Les mots de passe ne correspondent pas");
+   812→      return;
+   813→    }
+   814→    if (newPassword.length < 6) {
+   815→      setError("Le nouveau mot de passe doit contenir au moins 6 caractères");
+   816→      return;
+   817→    }
+   818→
+   819→    setLoading(true);
+   820→    try {
+   821→      const res = await fetch("/api/admin/password", {
+   822→        method: "POST",
+   823→        headers: { "Content-Type": "application/json" },
+   824→        body: JSON.stringify({ currentPassword, newPassword }),
+   825→      });
+   826→      const data = await res.json();
+   827→
+   828→      if (res.ok) {
+   829→        setMessage("Mot de passe changé avec succès !");
+   830→        setCurrentPassword("");
+   831→        setNewPassword("");
+   832→        setConfirmPassword("");
+   833→      } else {
+   834→        setError(data.error || "Erreur");
+   835→      }
+   836→    } catch {
+   837→      setError("Erreur serveur");
+   838→    } finally {
+   839→      setLoading(false);
+   840→    }
+   841→  };
+   842→
+   843→  return (
+   844→    <>
+   845→      <SectionCard title="Changer le mot de passe">
+   846→        <div className="space-y-4 max-w-md">
+   847→          {/* Current Password */}
+   848→          <div className="space-y-1.5">
+   849→            <label className="text-white/50 text-xs tracking-wider uppercase font-[var(--font-lato)]">
+   850→              Mot de passe actuel
+   851→            </label>
+   852→            <div className="relative">
+   853→              <Input
+   854→                type={showCurrent ? "text" : "password"}
+   855→                value={currentPassword}
+   856→                onChange={(e) => setCurrentPassword(e.target.value)}
+   857→                placeholder="••••••••"
+   858→                className="bg-white/5 border-gold/15 text-white hover:border-gold/30 focus:border-gold/50 font-[var(--font-lato)] text-sm pr-10"
+   859→              />
+   860→              <button
+   861→                type="button"
+   862→                onClick={() => setShowCurrent(!showCurrent)}
+   863→                className="absolute right-3 top-1/2 -translate-y-1/2 text-gold/50 hover:text-gold transition-colors"
+   864→              >
+   865→                {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+   866→              </button>
+   867→            </div>
+   868→          </div>
+   869→
+   870→          {/* New Password */}
+   871→          <div className="space-y-1.5">
+   872→            <label className="text-white/50 text-xs tracking-wider uppercase font-[var(--font-lato)]">
+   873→              Nouveau mot de passe
+   874→            </label>
+   875→            <div className="relative">
+   876→              <Input
+   877→                type={showNew ? "text" : "password"}
+   878→                value={newPassword}
+   879→                onChange={(e) => setNewPassword(e.target.value)}
+   880→                placeholder="Min. 6 caractères"
+   881→                className="bg-white/5 border-gold/15 text-white hover:border-gold/30 focus:border-gold/50 font-[var(--font-lato)] text-sm pr-10"
+   882→              />
+   883→              <button
+   884→                type="button"
+   885→                onClick={() => setShowNew(!showNew)}
+   886→                className="absolute right-3 top-1/2 -translate-y-1/2 text-gold/50 hover:text-gold transition-colors"
+   887→              >
+   888→                {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+   889→              </button>
+   890→            </div>
+   891→            {/* Strength Indicator */}
+   892→            {newPassword && (
+   893→              <div className="space-y-1.5">
+   894→                <div className="flex gap-1">
+   895→                  {[1, 2, 3, 4, 5].map((level) => (
+   896→                    <div
+   897→                      key={level}
+   898→                      className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
+   899→                        level <= strength.level ? strength.color : "bg-white/10"
+   900→                      }`}
+   901→                    />
+   902→                  ))}
+   903→                </div>
+   904→                <div className="flex items-center gap-1.5">
+   905→                  {strength.level >= 4 ? (
+   906→                    <ShieldCheck className="w-3 h-3 text-green-400" />
+   907→                  ) : strength.level >= 1 ? (
+   908→                    <AlertTriangle className="w-3 h-3 text-orange-400" />
+   909→                  ) : null}
+   910→                  <span className={`text-xs font-[var(--font-lato)] ${
+   911→                    strength.level >= 4 ? "text-green-400" :
+   912→                    strength.level >= 3 ? "text-yellow-400" :
+   913→                    strength.level >= 1 ? "text-orange-400" : "text-red-400"
+   914→                  }`}>
+   915→                    {strength.label}
+   916→                  </span>
+   917→                </div>
+   918→              </div>
+   919→            )}
+   920→          </div>
+   921→
+   922→          {/* Confirm Password */}
+   923→          <div className="space-y-1.5">
+   924→            <label className="text-white/50 text-xs tracking-wider uppercase font-[var(--font-lato)]">
+   925→              Confirmer le nouveau mot de passe
+   926→            </label>
+   927→            <div className="relative">
+   928→              <Input
+   929→                type={showConfirm ? "text" : "password"}
+   930→                value={confirmPassword}
+   931→                onChange={(e) => setConfirmPassword(e.target.value)}
+   932→                placeholder="••••••••"
+   933→                className={`bg-white/5 border-gold/15 text-white hover:border-gold/30 focus:border-gold/50 font-[var(--font-lato)] text-sm pr-10 ${
+   934→                  passwordsMismatch ? "border-red-500/50" : passwordsMatch ? "border-green-500/50" : ""
+   935→                }`}
+   936→              />
+   937→              <button
+   938→                type="button"
+   939→                onClick={() => setShowConfirm(!showConfirm)}
+   940→                className="absolute right-3 top-1/2 -translate-y-1/2 text-gold/50 hover:text-gold transition-colors"
+   941→              >
+   942→                {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+   943→              </button>
+   944→            </div>
+   945→            {passwordsMatch && (
+   946→              <p className="text-green-400 text-xs font-[var(--font-lato)] flex items-center gap-1">
+   947→                <ShieldCheck className="w-3 h-3" /> Les mots de passe correspondent
+   948→              </p>
+   949→            )}
+   950→            {passwordsMismatch && (
+   951→              <p className="text-red-400 text-xs font-[var(--font-lato)]">Les mots de passe ne correspondent pas</p>
+   952→            )}
+   953→          </div>
+   954→
+   955→          {error && (
+   956→            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+   957→              <p className="text-red-400 text-sm font-[var(--font-lato)]">{error}</p>
+   958→            </div>
+   959→          )}
+   960→          {message && (
+   961→            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+   962→              <p className="text-green-400 text-sm font-[var(--font-lato)]">{message}</p>
+   963→            </div>
+   964→          )}
+   965→
+   966→          <SaveButton
+   967→            saving={loading}
+   968→            onClick={handleChangePassword}
+   969→          />
+   970→        </div>
+   971→      </SectionCard>
+   972→
+   973→      {/* Security Info */}
+   974→      <SectionCard title="Informations de sécurité">
+   975→        <div className="space-y-3 max-w-md">
+   976→          <div className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
+   977→            <ShieldCheck className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+   978→            <div>
+   979→              <p className="text-white/80 text-sm font-[var(--font-lato)] font-semibold">Protection contre les tentatives</p>
+   980→              <p className="text-white/40 text-xs font-[var(--font-lato)]">Après 3 tentatives échouées, l&apos;accès est bloqué pendant 15 minutes.</p>
+   981→            </div>
+   982→          </div>
+   983→          <div className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
+   984→            <KeyRound className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+   985→            <div>
+   986→              <p className="text-white/80 text-sm font-[var(--font-lato)] font-semibold">Mot de passe par défaut</p>
+   987→              <p className="text-white/40 text-xs font-[var(--font-lato)]">Le mot de passe par défaut est <code className="text-gold bg-white/10 px-1.5 py-0.5 rounded">admin2024</code>. Changez-le immédiatement après la première connexion.</p>
+   988→            </div>
+   989→          </div>
+   990→          <div className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
+   991→            <Lock className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+   992→            <div>
+   993→              <p className="text-white/80 text-sm font-[var(--font-lato)] font-semibold">Session automatique</p>
+   994→              <p className="text-white/40 text-xs font-[var(--font-lato)]">La session expire automatiquement après 24 heures d&apos;inactivité.</p>
+   995→            </div>
+   996→          </div>
+   997→        </div>
+   998→      </SectionCard>
+   999→    </>
+  1000→  );
+  1001→}
+  1002→
