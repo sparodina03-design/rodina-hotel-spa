@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// RODINA Hotel & SPA - Prisma Schema
+// PostgreSQL database schema
 
 generator client {
   provider = "prisma-client-js"
@@ -10,30 +10,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  posts     Post[]
-
-  @@map("users")
-}
-
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String   @map("author_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  author User @relation(fields: [authorId], references: [id])
-
-  @@map("posts")
-}
+// ============ Admin Settings ============
+// Stores hotel settings as key-value pairs (one row per section)
+// Sections: hotel, currency, rooms, social, contact, images, content
 
 model AdminSetting {
   id    String @id @default(cuid())
@@ -43,6 +22,9 @@ model AdminSetting {
   @@map("admin_settings")
 }
 
+// ============ Admin Sessions ============
+// Stores active admin login sessions with expiry
+
 model AdminSession {
   id      String   @id @default(cuid())
   token   String   @unique
@@ -51,6 +33,9 @@ model AdminSession {
 
   @@map("admin_sessions")
 }
+
+// ============ Admin Password ============
+// Stores the hashed admin password (SHA-256)
 
 model AdminPassword {
   id   String @id @default(cuid())

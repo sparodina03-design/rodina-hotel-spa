@@ -50,5 +50,8 @@ test
 prompt
 
 server.log
+# PostgreSQL data directory
+.postgres/
+
 # Skills directory
 /skills/
