@@ -15,103 +15,120 @@ import {
 
 const rooms = [
   {
-    id: "standard",
-    name: "Standard Room",
-    image: "/images/room-standard.png",
-    price: 199,
+    id: "classique",
+    name: "Chambre Classique",
+    image: "/images/room-classic.png",
+    price: 166,
+    priceSingle: 141,
+    priceTriple: 202,
+    totalRooms: 50,
     size: "32 m²",
     bed: "Queen Bed",
+    maxGuests: "1–3 Adultes",
     description:
-      "A serene retreat featuring contemporary design, plush bedding, and a thoughtfully appointed workspace. Perfect for both leisure and business travelers seeking comfort and convenience.",
-    amenities: ["Free WiFi", "Smart TV", "Coffee Maker", "Rain Shower", "City View", "Mini Bar"],
+      "Un havre de sérénité au design contemporain, literie moelleuse et espace de travail soigneusement aménagé. Parfait pour les voyageurs d'affaires et de loisirs en quête de confort et de praticité.",
+    amenities: ["WiFi Gratuit", "Smart TV", "Machine à Café", "Douche Pluie", "Vue Ville", "Mini Bar"],
     icon: Wifi,
   },
   {
-    id: "twin",
-    name: "Twin Room",
+    id: "superieure",
+    name: "Chambre Supérieure",
     image: "/images/room-twin.png",
-    price: 229,
+    price: 198,
+    priceSingle: 167,
+    totalRooms: 10,
     size: "36 m²",
-    bed: "Twin Beds",
+    bed: "Twin / Double",
+    maxGuests: "1–2 Adultes",
     description:
-      "Ideal for friends or colleagues traveling together, our Twin Room features two comfortable single beds with navy accents, cozy blue armchairs, and a modern geometric carpet in calming neutral tones.",
-    amenities: ["Free WiFi", "Smart TV", "Coffee Maker", "Rain Shower", "City View", "Mini Bar"],
-    icon: Wifi,
-  },
-  {
-    id: "deluxe",
-    name: "Deluxe Room",
-    image: "/images/room-deluxe-pink.png",
-    price: 349,
-    size: "48 m²",
-    bed: "King Bed",
-    description:
-      "Elevate your stay in our Deluxe Room, offering panoramic city views through floor-to-ceiling windows, a vibrant pink accent chair, and a spacious marble bathroom. An ideal choice for those who appreciate refined details.",
-    amenities: [
-      "Free WiFi",
-      "65\" Smart TV",
-      "Espresso Machine",
-      "Bathtub & Shower",
-      "Panoramic View",
-      "Lounge Access",
-    ],
+      "Idéale pour les amis ou collègues voyageant ensemble, notre Chambre Supérieure dispose de deux lits confortables avec accents bleu marine, fauteuils moelleux et un tapis géométrique moderne aux tons neutres apaisants.",
+    amenities: ["WiFi Gratuit", "Smart TV", "Machine à Café", "Douche Pluie", "Vue Ville", "Mini Bar"],
     icon: Coffee,
     featured: true,
   },
   {
-    id: "romantic",
-    name: "Romantic Suite",
-    image: "/images/room-romantic.png",
-    price: 499,
-    size: "55 m²",
+    id: "premium",
+    name: "Chambre Premium",
+    image: "/images/room-deluxe-pink.png",
+    price: 224,
+    priceSingle: 193,
+    totalRooms: 10,
+    size: "48 m²",
     bed: "King Bed",
+    maxGuests: "1–2 Adultes",
     description:
-      "Celebrate love in our Romantic Suite, adorned with rose petals, towel art swans, and a luxurious terracotta headboard against botanical blue wallpaper. Perfect for honeymoons and anniversaries.",
+      "Élevez votre séjour dans notre Chambre Premium, offrant une vue panoramique sur la ville à travers des baies vitrées, un fauteuil rose vibrant et une salle de bain en marbre spacieuse. Un choix idéal pour les amateurs de raffinement.",
     amenities: [
-      "Free WiFi",
-      "65\" Smart TV",
-      "Champagne & Flowers",
-      "Jacuzzi Bath",
-      "Room Service",
-      "Late Checkout",
+      "WiFi Gratuit",
+      "Smart TV 65\"",
+      "Machine Espresso",
+      "Baignoire & Douche",
+      "Vue Panoramique",
+      "Accès Lounge",
     ],
     icon: Coffee,
   },
   {
-    id: "suite",
-    name: "Executive Suite",
+    id: "junior-suite",
+    name: "Suite Junior",
     image: "/images/room-suite.png",
-    price: 599,
-    size: "75 m²",
-    bed: "King Bed + Sofa",
+    price: 251,
+    priceSingle: 220,
+    totalRooms: 10,
+    size: "55 m²",
+    bed: "King Bed + Salon",
+    maxGuests: "1–2 Adultes",
     description:
-      "Our Executive Suite redefines luxury with a separate living area, dining space, and bedroom. Featuring bespoke furnishings, dual vanities, and exclusive butler service.",
+      "Notre Suite Junior redéfinit le luxe avec un salon séparé, un espace repas et une chambre. Dotée de mobilier sur mesure, de doubles vasques et d'un service de butler exclusif pour une expérience inoubliable.",
     amenities: [
-      "Free WiFi",
-      "75\" Smart TV",
-      "Full Kitchen",
-      "Jacuzzi Bath",
+      "WiFi Gratuit",
+      "Smart TV 75\"",
+      "Cuisine Équipée",
+      "Jacuzzi",
       "Butler Service",
-      "Airport Transfer",
+      "Transfert Aéroport",
     ],
     icon: Bath,
   },
   {
-    id: "family",
-    name: "Family Room",
-    image: "/images/room-family.png",
-    price: 449,
-    size: "52 m²",
-    bed: "Triple Beds",
+    id: "romantique",
+    name: "Suite Romantique",
+    image: "/images/room-romantic.png",
+    price: 320,
+    totalRooms: 5,
+    size: "55 m²",
+    bed: "King Bed",
+    maxGuests: "2 Adultes",
     description:
-      "Spacious and inviting, our Family Room accommodates up to three guests with three single beds, red accent chairs, and a cozy seating nook by the window. Designed for families and groups seeking comfort and style.",
+      "Célébrez l'amour dans notre Suite Romantique, parée de pétales de roses, de cygnes en serviette et d'une tête de lit terracotta luxueuse sur un papier peint botanique bleu. Parfaite pour les lunes de miel et anniversaires.",
     amenities: [
-      "Free WiFi",
+      "WiFi Gratuit",
+      "Smart TV 65\"",
+      "Champagne & Fleurs",
+      "Jacuzzi",
+      "Room Service",
+      "Late Checkout",
+    ],
+    icon: Bath,
+  },
+  {
+    id: "familiale",
+    name: "Chambre Familiale",
+    image: "/images/room-family.png",
+    price: 280,
+    totalRooms: 8,
+    size: "52 m²",
+    bed: "Lits Triple",
+    maxGuests: "3 Adultes",
+    description:
+      "Spacieuse et accueillante, notre Chambre Familiale accueille jusqu'à trois convives avec trois lits simples, des fauteuils rouges et un coin salon cosy près de la fenêtre. Conçue pour les familles et les groupes.",
+    amenities: [
+      "WiFi Gratuit",
       "Smart TV",
-      "Coffee Maker",
-      "Rain Shower",
-      "Seating Area",
-      "Kids Welcome",
+      "Machine à Café",
+      "Douche Pluie",
+      "Coin Salon",
+      "Enfants Bienvenus",
     ],
     icon: Maximize,
   },
@@ -130,15 +147,15 @@ export default function RoomsSection() {
           className="text-center mb-16"
         >
           <p className="text-gold tracking-[0.4em] uppercase text-sm mb-4 font-[var(--font-lato)]">
-            Accommodation
+            Hébergement
           </p>
           <h2 className="text-4xl md:text-5xl font-[var(--font-playfair)] font-bold mb-4 text-foreground">
-            Rooms & <span className="gold-text">Suites</span>
+            Chambres & <span className="gold-text">Suites</span>
           </h2>
           <div className="w-16 h-[2px] bg-gold mx-auto mb-6" />
           <p className="text-muted-foreground max-w-2xl mx-auto font-[var(--font-lato)] text-lg">
-            Each room and suite is a sanctuary of comfort, designed with
-            meticulous attention to detail and adorned with the finest materials.
+            Chaque chambre et suite est un sanctuaire de confort, conçu avec une
+            attention minutieuse aux détails et orné des plus beaux matériaux.
           </p>
         </motion.div>
 
@@ -159,7 +176,7 @@ export default function RoomsSection() {
             >
               {room.featured && (
                 <Badge className="absolute top-4 right-4 z-10 gold-gradient text-charcoal font-[var(--font-lato)] tracking-wider">
-                  Most Popular
+                  Recommandée
                 </Badge>
               )}
 
@@ -185,7 +202,7 @@ export default function RoomsSection() {
                       ${room.price}
                     </span>
                     <span className="text-white/60 text-sm font-[var(--font-lato)]">
-                      /night
+                      /nuit
                     </span>
                   </div>
                 </div>
@@ -193,12 +210,27 @@ export default function RoomsSection() {
 
               {/* Content */}
               <div className="p-6">
+                {/* Room Info Badges */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gold/10 text-gold text-xs font-[var(--font-lato)]">
+                    {room.maxGuests}
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gold/10 text-gold text-xs font-[var(--font-lato)]">
+                    {room.totalRooms} chambres
+                  </span>
+                  {room.priceSingle && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-charcoal/10 text-muted-foreground text-xs font-[var(--font-lato)]">
+                      Dès ${room.priceSingle}/pers.
+                    </span>
+                  )}
+                </div>
+
                 <p className="text-muted-foreground mb-4 font-[var(--font-lato)] leading-relaxed">
                   {room.description}
                 </p>
 
                 {/* Amenities */}
-                <div className="grid grid-cols-2 gap-2 mb-6">
+                <div className="grid grid-cols-2 gap-2 mb-4">
                   {room.amenities.map((amenity) => (
                     <div
                       key={amenity}
@@ -210,8 +242,13 @@ export default function RoomsSection() {
                   ))}
                 </div>
 
+                {/* Tax notice */}
+                <p className="text-xs text-muted-foreground/70 font-[var(--font-lato)] mb-4">
+                  + 9% Taxes et frais
+                </p>
+
                 <Button className="w-full bg-charcoal text-gold-light hover:bg-charcoal/90 tracking-wider uppercase font-[var(--font-lato)] group/btn">
-                  Book This Room
+                  Choisir cette chambre
                   <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" />
                 </Button>
               </div>

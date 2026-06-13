@@ -6,43 +6,43 @@ import { Button } from "@/components/ui/button";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const galleryImages = [
-  { src: "/images/hotel-exterior.png", alt: "Hotel Exterior", category: "Hotel" },
-  { src: "/images/lobby.png", alt: "Grand Lobby & Reception", category: "Hotel" },
-  { src: "/images/conference.png", alt: "Conference Room", category: "Hotel" },
-  { src: "/images/conference-banquet.png", alt: "Banquet Hall", category: "Hotel" },
-  { src: "/images/room-standard.png", alt: "Room Service Breakfast", category: "Rooms" },
-  { src: "/images/room-twin.png", alt: "Twin Room", category: "Rooms" },
-  { src: "/images/room-deluxe-pink.png", alt: "Deluxe Room", category: "Rooms" },
-  { src: "/images/room-romantic.png", alt: "Romantic Suite", category: "Rooms" },
-  { src: "/images/room-suite.png", alt: "Executive Suite", category: "Rooms" },
-  { src: "/images/room-family.png", alt: "Family Room", category: "Rooms" },
-  { src: "/images/room-classic.png", alt: "Classic Room", category: "Rooms" },
-  { src: "/images/room-city-view.png", alt: "Room with City View", category: "Rooms" },
-  { src: "/images/fine-dining.png", alt: "Fine Dining Restaurant", category: "Dining" },
-  { src: "/images/seafood.png", alt: "Seafood Platter", category: "Dining" },
-  { src: "/images/desserts.png", alt: "Patisserie Desserts", category: "Dining" },
-  { src: "/images/rooftop-dining.png", alt: "Rooftop Dining", category: "Dining" },
-  { src: "/images/terrace.png", alt: "Garden Terrace", category: "Dining" },
-  { src: "/images/pool.png", alt: "Indoor Pool", category: "Amenities" },
-  { src: "/images/pool-lounge.png", alt: "Pool Lounge", category: "Amenities" },
-  { src: "/images/spa-treatment.png", alt: "Spa Treatment", category: "Amenities" },
-  { src: "/images/hammam.png", alt: "Hammam & Bath", category: "Amenities" },
-  { src: "/images/spa-salon.png", alt: "Beauty Salon", category: "Amenities" },
-  { src: "/images/bathroom-1.png", alt: "Luxury Bathroom", category: "Amenities" },
-  { src: "/images/bathroom-2.png", alt: "Stone Bath Suite", category: "Amenities" },
-  { src: "/images/terrace.png", alt: "Outdoor Lounge", category: "Amenities" },
-  { src: "/images/conference-banquet.png", alt: "Event Space", category: "Events" },
-  { src: "/images/conference.png", alt: "Meeting Room", category: "Events" },
+  { src: "/images/hotel-exterior.png", alt: "Extérieur de l'Hôtel", category: "Hôtel" },
+  { src: "/images/lobby.png", alt: "Grand Lobby & Réception", category: "Hôtel" },
+  { src: "/images/conference.png", alt: "Salle de Conférence", category: "Hôtel" },
+  { src: "/images/conference-banquet.png", alt: "Salle de Banquet", category: "Hôtel" },
+  { src: "/images/room-standard.png", alt: "Chambre Classique - Service en Chambre", category: "Chambres" },
+  { src: "/images/room-twin.png", alt: "Chambre Supérieure Twin", category: "Chambres" },
+  { src: "/images/room-deluxe-pink.png", alt: "Chambre Premium", category: "Chambres" },
+  { src: "/images/room-romantic.png", alt: "Suite Romantique", category: "Chambres" },
+  { src: "/images/room-suite.png", alt: "Suite Junior", category: "Chambres" },
+  { src: "/images/room-family.png", alt: "Chambre Familiale", category: "Chambres" },
+  { src: "/images/room-classic.png", alt: "Chambre Classique", category: "Chambres" },
+  { src: "/images/room-city-view.png", alt: "Vue Ville depuis la Chambre", category: "Chambres" },
+  { src: "/images/fine-dining.png", alt: "Restaurant Gastronomique", category: "Restauration" },
+  { src: "/images/seafood.png", alt: "Plateau de Fruits de Mer", category: "Restauration" },
+  { src: "/images/desserts.png", alt: "Pâtisseries Artisanales", category: "Restauration" },
+  { src: "/images/rooftop-dining.png", alt: "Dîner sur le Toit", category: "Restauration" },
+  { src: "/images/terrace.png", alt: "Terrasse Jardin", category: "Restauration" },
+  { src: "/images/pool.png", alt: "Piscine Intérieure", category: "Équipements" },
+  { src: "/images/pool-lounge.png", alt: "Espace Détente Piscine", category: "Équipements" },
+  { src: "/images/spa-treatment.png", alt: "Soins Spa", category: "Équipements" },
+  { src: "/images/hammam.png", alt: "Hammam & Bien-être", category: "Équipements" },
+  { src: "/images/spa-salon.png", alt: "Salon de Beauté", category: "Équipements" },
+  { src: "/images/bathroom-1.png", alt: "Salle de Bain Luxe", category: "Équipements" },
+  { src: "/images/bathroom-2.png", alt: "Suite de Bain en Pierre", category: "Équipements" },
+  { src: "/images/terrace.png", alt: "Lounge Extérieur", category: "Équipements" },
+  { src: "/images/conference-banquet.png", alt: "Espace Événementiel", category: "Événements" },
+  { src: "/images/conference.png", alt: "Salle de Réunion", category: "Événements" },
 ];
 
-const categories = ["All", "Hotel", "Rooms", "Dining", "Amenities", "Events"];
+const categories = ["Toutes", "Hôtel", "Chambres", "Restauration", "Équipements", "Événements"];
 
 export default function GallerySection() {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState("Toutes");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const filteredImages =
-    activeCategory === "All"
+    activeCategory === "Toutes"
       ? galleryImages
       : galleryImages.filter((img) => img.category === activeCategory);
 
@@ -71,10 +71,10 @@ export default function GallerySection() {
           className="text-center mb-12"
         >
           <p className="text-gold tracking-[0.4em] uppercase text-sm mb-4 font-[var(--font-lato)]">
-            Visual Journey
+            Voyage Visuel
           </p>
           <h2 className="text-4xl md:text-5xl font-[var(--font-playfair)] font-bold mb-4 text-foreground">
-            Photo <span className="gold-text">Gallery</span>
+            Galerie <span className="gold-text">Photos</span>
           </h2>
           <div className="w-16 h-[2px] bg-gold mx-auto mb-6" />
         </motion.div>

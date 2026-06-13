@@ -213,11 +213,17 @@ export default function HeroSection() {
                   <SelectValue placeholder="Room type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="standard">Standard Room</SelectItem>
-                  <SelectItem value="deluxe">Deluxe Room</SelectItem>
-                  <SelectItem value="suite">Executive Suite</SelectItem>
-                  <SelectItem value="presidential">
-                    Presidential Suite
+                  <SelectItem value="classique">Chambre Classique</SelectItem>
+                  <SelectItem value="superieure">Chambre Supérieure</SelectItem>
+                  <SelectItem value="premium">Chambre Premium</SelectItem>
+                  <SelectItem value="junior-suite">
+                    Suite Junior
+                  </SelectItem>
+                  <SelectItem value="romantique">
+                    Suite Romantique
+                  </SelectItem>
+                  <SelectItem value="familiale">
+                    Chambre Familiale
                   </SelectItem>
                 </SelectContent>
               </Select>

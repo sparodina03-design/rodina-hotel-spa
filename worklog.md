@@ -158,3 +158,35 @@ Stage Summary:
 - Amenities section expanded from 6 to 8 visual cards with real bathroom photos
 - Gallery expanded from 20 to 27 items
 - All verified with zero errors
+
+---
+Task ID: 6
+Agent: Main Agent
+Task: Update rooms with real pricing data and French language
+
+Work Log:
+- Updated RoomsSection with real booking data from hotel's booking platform:
+  - Chambre Classique: $166/nuit (2 pers), $141 (1 pers), $202 (3 pers), 50 chambres
+  - Chambre Supérieure: $198/nuit (2 pers), $167 (1 pers), 10 chambres - "Recommandée"
+  - Chambre Premium: $224/nuit (2 pers), $193 (1 pers), 10 chambres
+  - Suite Junior: $251/nuit (2 pers), $220 (1 pers), 10 chambres
+  - Suite Romantique: $320/nuit, 5 chambres
+  - Chambre Familiale: $280/nuit, 8 chambres
+- Added room info badges: max guests, total rooms count, price per person
+- Added "+ 9% Taxes et frais" notice to all room cards
+- Changed button text to "Choisir cette chambre"
+- Changed section header to French: "Hébergement" / "Chambres & Suites"
+- Changed badge text from "Most Popular" to "Recommandée"
+- Updated HeroSection room type dropdown with French names
+- Updated GallerySection with French category names and image labels
+- Gallery categories: Toutes, Hôtel, Chambres, Restauration, Équipements, Événements
+- Gallery header: "Voyage Visuel" / "Galerie Photos"
+- Verified: All 6 room cards with correct prices, all badges present, no broken images, no console errors
+
+Stage Summary:
+- Room names and pricing now match real hotel booking data
+- All room-related text is in French
+- Added pricing details: per-person starting price, total room count, max guests, tax notice
+- Gallery fully localized in French
+- Hero booking form dropdown updated with French room types
+- Zero errors, fully verified
