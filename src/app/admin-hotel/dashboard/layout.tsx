@@ -19,6 +19,14 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Eye, EyeOff, ShieldCheck, AlertTriangle, Lock } from "lucide-react";
 
 type AdminTab =
   | "hotel"
@@ -452,6 +460,29 @@ function RoomsPanel({
 }
 
 // --- CURRENCY PANEL ---
+const popularCurrencies = [
+  { code: "MAD", symbol: "MAD", name: "Dirham marocain" },
+  { code: "EUR", symbol: "€", name: "Euro" },
+  { code: "USD", symbol: "$", name: "Dollar américain" },
+  { code: "GBP", symbol: "£", name: "Livre sterling" },
+  { code: "AED", symbol: "د.إ", name: "Dirham émirati" },
+  { code: "SAR", symbol: "﷼", name: "Riyal saoudien" },
+  { code: "TRY", symbol: "₺", name: "Livre turque" },
+  { code: "CHF", symbol: "CHF", name: "Franc suisse" },
+  { code: "CAD", symbol: "CA$", name: "Dollar canadien" },
+  { code: "AUD", symbol: "A$", name: "Dollar australien" },
+  { code: "JPY", symbol: "¥", name: "Yen japonais" },
+  { code: "CNY", symbol: "¥", name: "Yuan chinois" },
+  { code: "INR", symbol: "₹", name: "Roupie indienne" },
+  { code: "BRL", symbol: "R$", name: "Real brésilien" },
+  { code: "ZAR", symbol: "R", name: "Rand sud-africain" },
+  { code: "EGP", symbol: "E£", name: "Livre égyptienne" },
+  { code: "TND", symbol: "د.ت", name: "Dinar tunisien" },
+  { code: "DZD", symbol: "د.ج", name: "Dinar algérien" },
+  { code: "QAR", symbol: "﷼", name: "Riyal qatari" },
+  { code: "KWD", symbol: "د.ك", name: "Dinar koweïtien" },
+];
+
 function CurrencyPanel({
   settings,
   saving,
@@ -467,15 +498,73 @@ function CurrencyPanel({
     setForm(settings.currency || { code: "USD", symbol: "$", taxRate: 9 });
   }, [settings.currency]);
 
+  const handleCurrencySelect = (code: string) => {
+    const currency = popularCurrencies.find((c) => c.code === code);
+    if (currency) {
+      setForm({ ...form, code: currency.code, symbol: currency.symbol });
+    }
+  };
+
   const handleSave = () => onSave({ currency: form });
+
+  // Preview: how prices will look
+  const previewPrice = (amount: number) => {
+    return `${form.symbol}${amount}`;
+  };
 
   return (
     <>
       <SectionCard title="Devise & Taxes">
+        {/* Quick Currency Selector */}
+        <div className="space-y-1.5 mb-5">
+          <label className="text-white/50 text-xs tracking-wider uppercase font-[var(--font-lato)]">
+            Choisir une devise
+          </label>
+          <Select value={form.code} onValueChange={handleCurrencySelect}>
+            <SelectTrigger className="bg-white/5 border-gold/15 text-white hover:border-gold/30 focus:border-gold/50 font-[var(--font-lato)] text-sm">
+              <SelectValue placeholder="Sélectionner une devise" />
+            </SelectTrigger>
+            <SelectContent className="bg-[#1a1d2e] border-gold/20 max-h-64">
+              {popularCurrencies.map((currency) => (
+                <SelectItem
+                  key={currency.code}
+                  value={currency.code}
+                  className="text-white/80 hover:text-gold hover:bg-gold/10 focus:text-gold focus:bg-gold/10 font-[var(--font-lato)]"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="text-gold font-semibold w-10">{currency.symbol}</span>
+                    <span>{currency.code}</span>
+                    <span className="text-white/40 text-xs">— {currency.name}</span>
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Manual Override */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <FormField label="Code devise" value={form.code} onChange={(v) => setForm({ ...form, code: v })} placeholder="USD" />
+          <FormField label="Code devise" value={form.code} onChange={(v) => setForm({ ...form, code: v.toUpperCase() })} placeholder="USD" />
           <FormField label="Symbole" value={form.symbol} onChange={(v) => setForm({ ...form, symbol: v })} placeholder="$" />
           <FormField label="Taux de taxe (%)" value={form.taxRate} type="number" onChange={(v) => setForm({ ...form, taxRate: Number(v) })} />
+        </div>
+
+        {/* Live Preview */}
+        <div className="mt-5 p-4 bg-white/5 rounded-xl border border-gold/10">
+          <p className="text-white/40 text-xs tracking-wider uppercase font-[var(--font-lato)] mb-3">
+            Aperçu en direct
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {settings.rooms?.slice(0, 3).map((room) => (
+              <div key={room.id} className="text-center p-2 bg-white/5 rounded-lg">
+                <p className="text-white/60 text-xs font-[var(--font-lato)]">{room.name}</p>
+                <p className="text-gold text-lg font-[var(--font-playfair)] font-bold">
+                  {previewPrice(room.price)}
+                </p>
+                <p className="text-white/30 text-[10px] font-[var(--font-lato)]">/nuit + {form.taxRate}% tax</p>
+              </div>
+            ))}
+          </div>
         </div>
       </SectionCard>
       <div className="flex justify-end">
@@ -699,6 +788,22 @@ function ContentPanel({
 }
 
 // --- PASSWORD PANEL ---
+function getPasswordStrength(password: string): { level: number; label: string; color: string } {
+  if (!password) return { level: 0, label: "", color: "" };
+  let score = 0;
+  if (password.length >= 6) score++;
+  if (password.length >= 10) score++;
+  if (/[A-Z]/.test(password)) score++;
+  if (/[0-9]/.test(password)) score++;
+  if (/[^A-Za-z0-9]/.test(password)) score++;
+
+  if (score <= 1) return { level: 1, label: "Faible", color: "bg-red-500" };
+  if (score <= 2) return { level: 2, label: "Moyen", color: "bg-orange-500" };
+  if (score <= 3) return { level: 3, label: "Bon", color: "bg-yellow-500" };
+  if (score <= 4) return { level: 4, label: "Fort", color: "bg-green-400" };
+  return { level: 5, label: "Très fort", color: "bg-green-500" };
+}
+
 function PasswordPanel() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -706,6 +811,13 @@ function PasswordPanel() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const strength = getPasswordStrength(newPassword);
+  const passwordsMatch = newPassword && confirmPassword && newPassword === confirmPassword;
+  const passwordsMismatch = confirmPassword && newPassword !== confirmPassword;
 
   const handleChangePassword = async () => {
     setError("");
@@ -745,42 +857,161 @@ function PasswordPanel() {
   };
 
   return (
-    <SectionCard title="Changer le mot de passe">
-      <div className="space-y-4 max-w-md">
-        <FormField
-          label="Mot de passe actuel"
-          value={currentPassword}
-          onChange={setCurrentPassword}
-          type="password"
-          placeholder="••••••••"
-        />
-        <FormField
-          label="Nouveau mot de passe"
-          value={newPassword}
-          onChange={setNewPassword}
-          type="password"
-          placeholder="Min. 6 caractères"
-        />
-        <FormField
-          label="Confirmer le nouveau mot de passe"
-          value={confirmPassword}
-          onChange={setConfirmPassword}
-          type="password"
-          placeholder="••••••••"
-        />
+    <>
+      <SectionCard title="Changer le mot de passe">
+        <div className="space-y-4 max-w-md">
+          {/* Current Password */}
+          <div className="space-y-1.5">
+            <label className="text-white/50 text-xs tracking-wider uppercase font-[var(--font-lato)]">
+              Mot de passe actuel
+            </label>
+            <div className="relative">
+              <Input
+                type={showCurrent ? "text" : "password"}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="••••••••"
+                className="bg-white/5 border-gold/15 text-white hover:border-gold/30 focus:border-gold/50 font-[var(--font-lato)] text-sm pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowCurrent(!showCurrent)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gold/50 hover:text-gold transition-colors"
+              >
+                {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
 
-        {error && (
-          <p className="text-red-400 text-sm font-[var(--font-lato)]">{error}</p>
-        )}
-        {message && (
-          <p className="text-green-400 text-sm font-[var(--font-lato)]">{message}</p>
-        )}
+          {/* New Password */}
+          <div className="space-y-1.5">
+            <label className="text-white/50 text-xs tracking-wider uppercase font-[var(--font-lato)]">
+              Nouveau mot de passe
+            </label>
+            <div className="relative">
+              <Input
+                type={showNew ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Min. 6 caractères"
+                className="bg-white/5 border-gold/15 text-white hover:border-gold/30 focus:border-gold/50 font-[var(--font-lato)] text-sm pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowNew(!showNew)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gold/50 hover:text-gold transition-colors"
+              >
+                {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            {/* Strength Indicator */}
+            {newPassword && (
+              <div className="space-y-1.5">
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((level) => (
+                    <div
+                      key={level}
+                      className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
+                        level <= strength.level ? strength.color : "bg-white/10"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {strength.level >= 4 ? (
+                    <ShieldCheck className="w-3 h-3 text-green-400" />
+                  ) : strength.level >= 1 ? (
+                    <AlertTriangle className="w-3 h-3 text-orange-400" />
+                  ) : null}
+                  <span className={`text-xs font-[var(--font-lato)] ${
+                    strength.level >= 4 ? "text-green-400" :
+                    strength.level >= 3 ? "text-yellow-400" :
+                    strength.level >= 1 ? "text-orange-400" : "text-red-400"
+                  }`}>
+                    {strength.label}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
 
-        <SaveButton
-          saving={loading}
-          onClick={handleChangePassword}
-        />
-      </div>
-    </SectionCard>
+          {/* Confirm Password */}
+          <div className="space-y-1.5">
+            <label className="text-white/50 text-xs tracking-wider uppercase font-[var(--font-lato)]">
+              Confirmer le nouveau mot de passe
+            </label>
+            <div className="relative">
+              <Input
+                type={showConfirm ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                className={`bg-white/5 border-gold/15 text-white hover:border-gold/30 focus:border-gold/50 font-[var(--font-lato)] text-sm pr-10 ${
+                  passwordsMismatch ? "border-red-500/50" : passwordsMatch ? "border-green-500/50" : ""
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirm(!showConfirm)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gold/50 hover:text-gold transition-colors"
+              >
+                {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            {passwordsMatch && (
+              <p className="text-green-400 text-xs font-[var(--font-lato)] flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" /> Les mots de passe correspondent
+              </p>
+            )}
+            {passwordsMismatch && (
+              <p className="text-red-400 text-xs font-[var(--font-lato)]">Les mots de passe ne correspondent pas</p>
+            )}
+          </div>
+
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+              <p className="text-red-400 text-sm font-[var(--font-lato)]">{error}</p>
+            </div>
+          )}
+          {message && (
+            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+              <p className="text-green-400 text-sm font-[var(--font-lato)]">{message}</p>
+            </div>
+          )}
+
+          <SaveButton
+            saving={loading}
+            onClick={handleChangePassword}
+          />
+        </div>
+      </SectionCard>
+
+      {/* Security Info */}
+      <SectionCard title="Informations de sécurité">
+        <div className="space-y-3 max-w-md">
+          <div className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
+            <ShieldCheck className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-white/80 text-sm font-[var(--font-lato)] font-semibold">Protection contre les tentatives</p>
+              <p className="text-white/40 text-xs font-[var(--font-lato)]">Après 3 tentatives échouées, l&apos;accès est bloqué pendant 15 minutes.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
+            <KeyRound className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-white/80 text-sm font-[var(--font-lato)] font-semibold">Mot de passe par défaut</p>
+              <p className="text-white/40 text-xs font-[var(--font-lato)]">Le mot de passe par défaut est <code className="text-gold bg-white/10 px-1.5 py-0.5 rounded">admin2024</code>. Changez-le immédiatement après la première connexion.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
+            <Lock className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-white/80 text-sm font-[var(--font-lato)] font-semibold">Session automatique</p>
+              <p className="text-white/40 text-xs font-[var(--font-lato)]">La session expire automatiquement après 24 heures d&apos;inactivité.</p>
+            </div>
+          </div>
+        </div>
+      </SectionCard>
+    </>
   );
 }

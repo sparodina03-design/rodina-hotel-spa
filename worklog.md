@@ -270,3 +270,24 @@ Stage Summary:
 - All public components now read from dynamic settings store
 - Admin can edit all content, prices, images, social links, contact info from dashboard
 - Changes reflect immediately on the public site
+---
+Task ID: 8
+Agent: Main Agent
+Task: Enhance admin dashboard with improved currency selector and password change features
+
+Work Log:
+- Enhanced CurrencyPanel with dropdown selector for 20 popular currencies (MAD, EUR, USD, GBP, AED, SAR, TRY, CHF, CAD, AUD, JPY, CNY, INR, BRL, ZAR, EGP, TND, DZD, QAR, KWD)
+- Added auto-fill of currency code and symbol when selecting from dropdown
+- Added live price preview section showing how room prices look with selected currency
+- Enhanced PasswordPanel with password strength indicator (5-level: Faible→Très fort)
+- Added show/hide toggle buttons (eye icon) for all 3 password fields
+- Added real-time password match/mismatch indicator
+- Added border color change (green=match, red=mismatch) on confirm field
+- Added Security Info section with tips about lockout, default password, and session expiry
+- Fixed missing Lock import from lucide-react
+- Verified all features working via browser automation test
+
+Stage Summary:
+- Currency panel now has a professional dropdown with 20 currencies including MAD, EUR, USD, AED, SAR
+- Password panel has strength indicator, show/hide toggles, and match confirmation
+- Both features fully functional and tested
