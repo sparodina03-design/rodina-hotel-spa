@@ -36,8 +36,8 @@ export default function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/images/hero-bg.png"
-          alt="MH Hotel exterior"
+          src="/images/lobby.png"
+          alt="MH Hotel grand lobby"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />

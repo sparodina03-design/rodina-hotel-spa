@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "MH Hotel" }],
   icons: {
-    icon: "/images/logo.png",
+    icon: "/favicon.ico",
   },
   openGraph: {
     title: "MH HOTEL | Luxury Redefined",

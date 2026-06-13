@@ -6,18 +6,18 @@ import { Button } from "@/components/ui/button";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const galleryImages = [
-  { src: "/images/hero-bg.png", alt: "Hotel Exterior", category: "Hotel" },
-  { src: "/images/lobby.png", alt: "Grand Lobby", category: "Hotel" },
+  { src: "/images/lobby.png", alt: "Grand Lobby & Reception", category: "Hotel" },
+  { src: "/images/conference.png", alt: "Conference Room", category: "Hotel" },
+  { src: "/images/room-standard.png", alt: "Room Service Breakfast", category: "Rooms" },
   { src: "/images/room-deluxe.png", alt: "Deluxe Room", category: "Rooms" },
   { src: "/images/room-suite.png", alt: "Executive Suite", category: "Rooms" },
-  { src: "/images/room-standard.png", alt: "Standard Room", category: "Rooms" },
-  { src: "/images/restaurant.png", alt: "The Goldfinch Restaurant", category: "Dining" },
-  { src: "/images/rooftop.png", alt: "Sky Lounge", category: "Dining" },
-  { src: "/images/pool.png", alt: "Infinity Pool", category: "Amenities" },
-  { src: "/images/spa.png", alt: "Luxury Spa", category: "Amenities" },
-  { src: "/images/gym.png", alt: "Fitness Center", category: "Amenities" },
-  { src: "/images/events.png", alt: "Grand Ballroom", category: "Events" },
-  { src: "/images/pool.png", alt: "Pool at Dusk", category: "Amenities" },
+  { src: "/images/rooftop-dining.png", alt: "Rooftop Dining", category: "Dining" },
+  { src: "/images/terrace.png", alt: "Garden Terrace", category: "Dining" },
+  { src: "/images/terrace.png", alt: "Outdoor Lounge", category: "Amenities" },
+  { src: "/images/conference.png", alt: "Meeting Room", category: "Events" },
+  { src: "/images/lobby.png", alt: "Hotel Entrance", category: "Hotel" },
+  { src: "/images/rooftop-dining.png", alt: "Terrace Breakfast", category: "Dining" },
+  { src: "/images/room-deluxe.png", alt: "Suite Living Area", category: "Rooms" },
 ];
 
 const categories = ["All", "Hotel", "Rooms", "Dining", "Amenities", "Events"];

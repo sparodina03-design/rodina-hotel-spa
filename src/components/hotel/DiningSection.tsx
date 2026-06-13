@@ -38,7 +38,7 @@ export default function DiningSection() {
             className="group relative rounded-2xl overflow-hidden h-[500px] cursor-pointer"
           >
             <img
-              src="/images/restaurant.png"
+              src="/images/rooftop-dining.png"
               alt="The Goldfinch restaurant"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
@@ -79,8 +79,8 @@ export default function DiningSection() {
             className="group relative rounded-2xl overflow-hidden h-[500px] cursor-pointer"
           >
             <img
-              src="/images/rooftop.png"
-              alt="Sky Lounge rooftop bar"
+              src="/images/terrace.png"
+              alt="Sky Lounge rooftop terrace"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -120,20 +120,20 @@ export default function DiningSection() {
             className="group relative rounded-2xl overflow-hidden h-[500px] cursor-pointer"
           >
             <img
-              src="/images/pool.png"
-              alt="Azure poolside dining"
+              src="/images/rooftop-dining.png"
+              alt="Azure terrace dining"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-8">
               <p className="text-gold text-xs tracking-[0.4em] uppercase mb-2 font-[var(--font-lato)]">
-                Poolside
+                Terrace
               </p>
               <h3 className="text-2xl font-[var(--font-playfair)] font-bold text-white mb-3">
-                Azure Bistro
+                Azure Terrace
               </h3>
               <p className="text-white/70 font-[var(--font-lato)] mb-4 leading-relaxed">
-                Relaxed poolside dining with Mediterranean-inspired dishes, fresh
+                Relaxed terrace dining with Mediterranean-inspired dishes, fresh
                 seafood, and tropical cocktails. The perfect daytime escape.
               </p>
               <div className="flex items-center justify-between">

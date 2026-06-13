@@ -68,7 +68,7 @@ const rooms = [
   {
     id: "presidential",
     name: "Presidential Suite",
-    image: "/images/lobby.png",
+    image: "/images/room-suite.png",
     price: 1299,
     size: "150 m²",
     bed: "King Bed + Guest Room",
