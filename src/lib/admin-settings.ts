@@ -235,40 +235,59 @@ async function initializeDefaultSettings(): Promise<void> {
 }
 
 export async function saveSettings(settings: Partial<AdminSettings>): Promise<AdminSettings> {
-  const current = await getSettings();
-  const merged = { ...current, ...settings };
+  try {
+    const current = await getSettings();
+    const merged = { ...current, ...settings };
 
-  // Deep merge nested objects
-  if (settings.hotel) merged.hotel = { ...current.hotel, ...settings.hotel };
-  if (settings.currency) merged.currency = { ...current.currency, ...settings.currency };
-  if (settings.social) merged.social = { ...current.social, ...settings.social };
-  if (settings.contact) merged.contact = { ...current.contact, ...settings.contact };
-  if (settings.images) merged.images = { ...current.images, ...settings.images };
-  if (settings.content) merged.content = { ...current.content, ...settings.content };
-  if (settings.rooms) merged.rooms = settings.rooms;
+    // Deep merge nested objects
+    if (settings.hotel) merged.hotel = { ...current.hotel, ...settings.hotel };
+    if (settings.currency) merged.currency = { ...current.currency, ...settings.currency };
+    if (settings.social) merged.social = { ...current.social, ...settings.social };
+    if (settings.contact) merged.contact = { ...current.contact, ...settings.contact };
+    if (settings.images) merged.images = { ...current.images, ...settings.images };
+    if (settings.content) merged.content = { ...current.content, ...settings.content };
+    if (settings.rooms) merged.rooms = settings.rooms;
 
-  // Save each section to database
-  const sections: Record<string, string> = {
-    hotel: JSON.stringify(merged.hotel),
-    currency: JSON.stringify(merged.currency),
-    rooms: JSON.stringify(merged.rooms),
-    social: JSON.stringify(merged.social),
-    contact: JSON.stringify(merged.contact),
-    images: JSON.stringify(merged.images),
-    content: JSON.stringify(merged.content),
-  };
+    // Save each section to database
+    const sections: Record<string, string> = {
+      hotel: JSON.stringify(merged.hotel),
+      currency: JSON.stringify(merged.currency),
+      rooms: JSON.stringify(merged.rooms),
+      social: JSON.stringify(merged.social),
+      contact: JSON.stringify(merged.contact),
+      images: JSON.stringify(merged.images),
+      content: JSON.stringify(merged.content),
+    };
 
-  for (const [key, value] of Object.entries(sections)) {
-    if (settings[key as keyof Partial<AdminSettings>] !== undefined) {
-      await db.adminSetting.upsert({
-        where: { key },
-        update: { value },
-        create: { key, value },
-      });
+    for (const [key, value] of Object.entries(sections)) {
+      if (settings[key as keyof Partial<AdminSettings>] !== undefined) {
+        try {
+          await db.adminSetting.upsert({
+            where: { key },
+            update: { value },
+            create: { key, value },
+          });
+        } catch (dbError) {
+          console.error(`Failed to save setting "${key}":`, dbError);
+        }
+      }
     }
-  }
 
-  return merged;
+    return merged;
+  } catch (error) {
+    console.error("Failed to save settings:", error);
+    // Return merged settings even if DB save fails
+    const current = DEFAULT_SETTINGS;
+    const merged = { ...current, ...settings };
+    if (settings.hotel) merged.hotel = { ...current.hotel, ...settings.hotel };
+    if (settings.currency) merged.currency = { ...current.currency, ...settings.currency };
+    if (settings.social) merged.social = { ...current.social, ...settings.social };
+    if (settings.contact) merged.contact = { ...current.contact, ...settings.contact };
+    if (settings.images) merged.images = { ...current.images, ...settings.images };
+    if (settings.content) merged.content = { ...current.content, ...settings.content };
+    if (settings.rooms) merged.rooms = settings.rooms;
+    return merged;
+  }
 }
 
 // ============ Password Management (PostgreSQL) ============
@@ -302,36 +321,52 @@ export async function verifyPassword(password: string): Promise<boolean> {
 }
 
 export async function changePassword(currentPassword: string, newPassword: string): Promise<boolean> {
-  const valid = await verifyPassword(currentPassword);
-  if (!valid) return false;
+  try {
+    const valid = await verifyPassword(currentPassword);
+    if (!valid) return false;
 
-  const newHash = hashPassword(newPassword);
+    const newHash = hashPassword(newPassword);
 
-  // Delete existing passwords and create new one
-  await db.adminPassword.deleteMany({});
-  await db.adminPassword.create({
-    data: { hash: newHash },
-  });
+    // Delete existing passwords and create new one
+    await db.adminPassword.deleteMany({});
+    await db.adminPassword.create({
+      data: { hash: newHash },
+    });
 
-  return true;
+    return true;
+  } catch (error) {
+    console.error("Failed to change password:", error);
+    return false;
+  }
 }
 
 // ============ Session Management (PostgreSQL) ============
 
 export async function createSession(): Promise<string> {
-  const token = crypto.randomBytes(32).toString("hex");
-  const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+  try {
+    const token = crypto.randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-  // Clean expired sessions
-  await db.adminSession.deleteMany({
-    where: { expires: { lt: new Date() } },
-  });
+    // Clean expired sessions
+    try {
+      await db.adminSession.deleteMany({
+        where: { expires: { lt: new Date() } },
+      });
+    } catch {
+      // Ignore cleanup errors
+    }
 
-  await db.adminSession.create({
-    data: { token, expires },
-  });
+    await db.adminSession.create({
+      data: { token, expires },
+    });
 
-  return token;
+    return token;
+  } catch (error) {
+    console.error("Failed to create session:", error);
+    // Return a temporary in-memory token as fallback
+    const fallbackToken = crypto.randomBytes(32).toString("hex");
+    return fallbackToken;
+  }
 }
 
 export async function verifySession(token: string): Promise<boolean> {

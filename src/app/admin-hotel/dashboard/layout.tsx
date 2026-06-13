@@ -52,6 +52,18 @@ export const AdminContext = createContext<AdminContextType>({
 
 export const useAdmin = () => useContext(AdminContext);
 
+// Custom hook to sync form state with server data
+// Uses useEffect internally to subscribe to changes
+function useSyncedState<T>(serverValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
+  const [state, setState] = useState(serverValue);
+  
+  useEffect(() => {
+    setState(serverValue);
+  }, [serverValue]);
+  
+  return [state, setState];
+}
+
 const tabs: { id: AdminTab; label: string; icon: React.ElementType }[] = [
   { id: "hotel", label: "Hôtel", icon: Hotel },
   { id: "rooms", label: "Chambres", icon: BedDouble },
@@ -364,11 +376,7 @@ function HotelPanel({
   saving: boolean;
   onSave: (p: Partial<AdminSettings>) => Promise<void>;
 }) {
-  const [form, setForm] = useState(settings.hotel || {});
-
-  useEffect(() => {
-    setForm(settings.hotel || {});
-  }, [settings.hotel]);
+  const [form, setForm] = useSyncedState(settings.hotel || {});
 
   const handleSave = () => onSave({ hotel: form });
 
@@ -401,11 +409,7 @@ function RoomsPanel({
   saving: boolean;
   onSave: (p: Partial<AdminSettings>) => Promise<void>;
 }) {
-  const [rooms, setRooms] = useState(settings.rooms || []);
-
-  useEffect(() => {
-    setRooms(settings.rooms || []);
-  }, [settings.rooms]);
+  const [rooms, setRooms] = useSyncedState(settings.rooms || []);
 
   const updateRoom = (index: number, field: string, value: string | number) => {
     const updated = [...rooms];
@@ -492,11 +496,7 @@ function CurrencyPanel({
   saving: boolean;
   onSave: (p: Partial<AdminSettings>) => Promise<void>;
 }) {
-  const [form, setForm] = useState(settings.currency || { code: "USD", symbol: "$", taxRate: 9 });
-
-  useEffect(() => {
-    setForm(settings.currency || { code: "USD", symbol: "$", taxRate: 9 });
-  }, [settings.currency]);
+  const [form, setForm] = useSyncedState(settings.currency || { code: "USD", symbol: "$", taxRate: 9 });
 
   const handleCurrencySelect = (code: string) => {
     const currency = popularCurrencies.find((c) => c.code === code);
@@ -584,11 +584,7 @@ function SocialPanel({
   saving: boolean;
   onSave: (p: Partial<AdminSettings>) => Promise<void>;
 }) {
-  const [form, setForm] = useState(settings.social || {});
-
-  useEffect(() => {
-    setForm(settings.social || {});
-  }, [settings.social]);
+  const [form, setForm] = useSyncedState(settings.social || {});
 
   const handleSave = () => onSave({ social: form });
 
@@ -620,11 +616,7 @@ function ContactPanel({
   saving: boolean;
   onSave: (p: Partial<AdminSettings>) => Promise<void>;
 }) {
-  const [form, setForm] = useState(settings.contact || {});
-
-  useEffect(() => {
-    setForm(settings.contact || {});
-  }, [settings.contact]);
+  const [form, setForm] = useSyncedState(settings.contact || {});
 
   const handleSave = () => onSave({ contact: form });
 
@@ -654,11 +646,7 @@ function ImagesPanel({
   saving: boolean;
   onSave: (p: Partial<AdminSettings>) => Promise<void>;
 }) {
-  const [form, setForm] = useState(settings.images || {});
-
-  useEffect(() => {
-    setForm(settings.images || {});
-  }, [settings.images]);
+  const [form, setForm] = useSyncedState(settings.images || {});
 
   const handleSave = () => onSave({ images: form });
 
@@ -716,11 +704,7 @@ function ContentPanel({
   saving: boolean;
   onSave: (p: Partial<AdminSettings>) => Promise<void>;
 }) {
-  const [form, setForm] = useState(settings.content || {});
-
-  useEffect(() => {
-    setForm(settings.content || {});
-  }, [settings.content]);
+  const [form, setForm] = useSyncedState(settings.content || {});
 
   const handleSave = () => onSave({ content: form });
 
